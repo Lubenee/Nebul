@@ -111,5 +111,34 @@ namespace GUI
     GUI::max_press_time pt;
     bool show_menu;
   };
+
+  class texture_selector
+  {
+  public:
+    texture_selector(const float _x, const float _y, const float _width, const float _height, const float grid_size, const sf::Texture &texture_sheet, sf::Font &font);
+
+    void update(const sf::Vector2i &mouse_pos_window);
+    void render(sf::RenderTarget &target);
+
+    const bool get_active() const;
+    const sf::IntRect &get_texture_rect() const;
+
+    ~texture_selector();
+
+  private:
+    sf::RectangleShape bounds;
+    sf::Sprite sheet;
+    float grid_size;
+
+    bool active;
+    bool hidden;
+    button *hide_button;
+
+    sf::RectangleShape selector;
+    sf::IntRect texture_rect;
+    sf::Vector2u mouse_pos_grid;
+
+    max_press_time pt;
+  };
 } // namespace GUI
 #endif

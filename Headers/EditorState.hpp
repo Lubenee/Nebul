@@ -49,6 +49,7 @@ private:
     pause_menu *p_menu;
 
     sf::RectangleShape selector;
+    GUI::texture_selector *tex_selector;
 
     sf::IntRect texture_rect;
 };

@@ -21,6 +21,8 @@ void editor_state::init_gui()
     selector.setOutlineThickness(-1.f);
     selector.setOutlineColor(sf::Color(50, 200, 20, 255));
     selector.setTexture(map->get_tilesheet());
+
+    tex_selector = new GUI::texture_selector(40.f, 40.f, 800.f, 200.f, state_details->grid_size, *(map->get_tilesheet()), font);
 }
 
 void editor_state::init_text()
@@ -72,13 +74,24 @@ void editor_state::update_buttons()
 {
     for (auto &i : buttons)
         i.second->update(mouse_pos_view);
+
+    std::stringstream ss;
+    ss << mouse_pos_view.x << ' ' << mouse_pos_view.y << '\n'
+       << mouse_pos_grid.x << ' ' << mouse_pos_grid.y << '\n'
+       << texture_rect.left << ' ' << texture_rect.top;
+    mouse_text.setString(ss.str());
 }
 
 void editor_state::update_gui()
 {
-    // for snappy selection
-    selector.setPosition(mouse_pos_grid.x * state_details->grid_size, mouse_pos_grid.y * state_details->grid_size);
-    selector.setTextureRect(texture_rect);
+
+    tex_selector->update(mouse_pos_window);
+    if (!tex_selector->get_active())
+    {
+        // for snappy selection
+        selector.setPosition(mouse_pos_grid.x * state_details->grid_size, mouse_pos_grid.y * state_details->grid_size);
+        selector.setTextureRect(texture_rect);
+    }
 
     mouse_text.setPosition(mouse_pos_view.x - mouse_text_offset, mouse_pos_view.y);
     std::stringstream ss;
@@ -99,30 +112,43 @@ void editor_state::update_editor_input()
 {
     // Add a new tile
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        map->add_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, texture_rect);
+    {
+        if (!tex_selector->get_active())
+            map->add_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, texture_rect);
+        else
+        {
+            texture_rect = tex_selector->get_texture_rect();
+        }
+    }
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
-        map->remove_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0);
+    {
+        if (!tex_selector->get_active())
+            map->remove_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0);
+        else
+        {
+        }
+    }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && pressable_button())
-    {
-        if (texture_rect.left < 700)
-            texture_rect.left += 100;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && pressable_button())
-    {
-        if (texture_rect.left >= 100)
-            texture_rect.left -= 100;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && pressable_button())
-    {
-        if (texture_rect.top >= 100)
-            texture_rect.top -= 100;
-    }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && pressable_button())
-    {
-        if (texture_rect.top < 100)
-            texture_rect.top += 100;
-    }
+    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && pressable_button())
+    // {
+    //     if (texture_rect.left < 700)
+    //         texture_rect.left += 100;
+    // }
+    // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && pressable_button())
+    // {
+    //     if (texture_rect.left >= 100)
+    //         texture_rect.left -= 100;
+    // }
+    // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && pressable_button())
+    // {
+    //     if (texture_rect.top >= 100)
+    //         texture_rect.top -= 100;
+    // }
+    // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && pressable_button())
+    // {
+    //     if (texture_rect.top < 100)
+    //         texture_rect.top += 100;
+    // }
 }
 
 void editor_state::update_pause_menu()
@@ -146,6 +172,7 @@ void editor_state::update(const float &dt)
     }
     else
     {
+        tex_selector->update(mouse_pos_window);
         update_buttons();
         update_gui();
         update_editor_input();
@@ -160,7 +187,10 @@ void editor_state::render_buttons(sf::RenderTarget &target)
 
 void editor_state::render_gui(sf::RenderTarget &target)
 {
-    target.draw(selector);
+    if (!tex_selector->get_active())
+        target.draw(selector);
+
+    tex_selector->render(target);
     target.draw(mouse_text);
 }
 
@@ -184,4 +214,5 @@ editor_state::~editor_state()
 
     delete p_menu;
     delete map;
+    delete tex_selector;
 }
