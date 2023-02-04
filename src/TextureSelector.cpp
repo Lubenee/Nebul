@@ -10,11 +10,11 @@ texture_selector::texture_selector(const float _x, const float _y,
 {
     this->grid_size = grid_size;
     active = false;
-    hidden = false;
-    float offset = 50.f;
+    hidden = true;
+    float offset = 100.f;
 
     bounds.setSize(sf::Vector2f(_width, _height));
-    bounds.setPosition(_x + offset, _y + offset);
+    bounds.setPosition(_x + offset, _y);
     bounds.setFillColor(sf::Color(50, 50, 50, 70));
     bounds.setOutlineThickness(-1.f);
     bounds.setOutlineColor(sf::Color(255, 255, 255, 100));
@@ -38,9 +38,8 @@ texture_selector::texture_selector(const float _x, const float _y,
     texture_rect.height = static_cast<int>(grid_size);
 
     hide_button = new button(_x, _y, 50.f, 35.f, "X", &font, 26,
-                             sf::Color(255, 255, 255, 150), sf::Color(255, 255, 255, 200),
-                             sf::Color(40, 40, 40, 80), sf::Color(100, 100, 100, 200),
-                             sf::Color(200, 200, 200, 200), sf::Color(30, 30, 30, 200));
+                             sf::Color(70, 70, 70, 150), sf::Color(255, 255, 255, 200), sf::Color(40, 40, 40, 80),
+                             sf::Color(70, 70, 70, 100), sf::Color(150, 150, 150, 250), sf::Color(20, 20, 20, 50));
 }
 
 void texture_selector::update(const sf::Vector2i &mouse_pos_window)

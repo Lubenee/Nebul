@@ -43,11 +43,8 @@ button::button(float x, float y,
   text.setString(_text);
   text.setFillColor(text_idle_color);
   text.setCharacterSize(char_size);
-  text.setPosition(shape.getPosition().x + shape.getGlobalBounds().width / 2.f -
-                       text.getGlobalBounds().width / 2.f,
-                   shape.getPosition().y +
-                       shape.getGlobalBounds().height / 2.f -
-                       text.getGlobalBounds().height / 4.f);
+  text.setPosition(shape.getPosition().x + shape.getGlobalBounds().width / 2.f - text.getGlobalBounds().width / 2.f,
+                   shape.getPosition().y + shape.getGlobalBounds().height / 2.f - text.getGlobalBounds().height / 4.f);
 
   button_state = bs::idle;
 }

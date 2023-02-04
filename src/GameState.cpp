@@ -18,7 +18,7 @@ void game_state::init_pause_menu()
 
 void game_state::init_map()
 {
-    map = new tilemap(state_details->grid_size, 10, 10);
+    // map = new tilemap(state_details->grid_size, 10, 10, "../Assets/tiles/tilesheet1.png");
 }
 
 void game_state::init_player()

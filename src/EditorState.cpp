@@ -16,13 +16,18 @@ editor_state::editor_state(state_data *_state_data)
 
 void editor_state::init_gui()
 {
+    sidebar.setSize(sf::Vector2f(80.f, static_cast<float>(state_details->gfx_settings->resolution.height)));
+    sidebar.setFillColor(sf::Color(50, 50, 50, 100));
+    sidebar.setOutlineColor(sf::Color(200, 200, 200, 150));
+    sidebar.setOutlineThickness(-1.f);
+
     selector.setFillColor(sf::Color(200, 200, 200, 125));
     selector.setSize(sf::Vector2f(state_details->grid_size, state_details->grid_size));
     selector.setOutlineThickness(-1.f);
     selector.setOutlineColor(sf::Color(50, 200, 20, 255));
     selector.setTexture(map->get_tilesheet());
 
-    tex_selector = new GUI::texture_selector(40.f, 40.f, 800.f, 200.f, state_details->grid_size, *(map->get_tilesheet()), font);
+    tex_selector = new GUI::texture_selector(20.f, 20.f, 800.f, 200.f, state_details->grid_size, *(map->get_tilesheet()), font);
 }
 
 void editor_state::init_text()
@@ -35,11 +40,12 @@ void editor_state::init_text()
 void editor_state::init_pause_menu()
 {
     p_menu = new pause_menu(*window, font);
+    p_menu->add_button("SAVE", 190.f, "Save");
 }
 
 void editor_state::init_tilemap()
 {
-    map = new tilemap(state_details->grid_size, 100, 100);
+    map = new tilemap(state_details->grid_size, 100, 100, "../Assets/tiles/tilesheet1.png");
     texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
 }
 
@@ -56,6 +62,7 @@ void editor_state::init_keybinds()
     }
     ifs.close();
 }
+
 void editor_state::init_fonts()
 {
     if (!font.loadFromFile("../Fonts/pixelfont.TTF"))
@@ -113,42 +120,21 @@ void editor_state::update_editor_input()
     // Add a new tile
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        if (!tex_selector->get_active())
-            map->add_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, texture_rect);
-        else
+        if (!sidebar.getGlobalBounds().contains(sf::Vector2f(mouse_pos_view)))
         {
-            texture_rect = tex_selector->get_texture_rect();
+            if (!tex_selector->get_active())
+                map->add_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, texture_rect);
+            else
+                texture_rect = tex_selector->get_texture_rect();
         }
     }
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
-        if (!tex_selector->get_active())
-            map->remove_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0);
-        else
-        {
-        }
-    }
+        if (!sidebar.getGlobalBounds().contains(sf::Vector2f(mouse_pos_view)))
 
-    // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && pressable_button())
-    // {
-    //     if (texture_rect.left < 700)
-    //         texture_rect.left += 100;
-    // }
-    // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && pressable_button())
-    // {
-    //     if (texture_rect.left >= 100)
-    //         texture_rect.left -= 100;
-    // }
-    // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && pressable_button())
-    // {
-    //     if (texture_rect.top >= 100)
-    //         texture_rect.top -= 100;
-    // }
-    // else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && pressable_button())
-    // {
-    //     if (texture_rect.top < 100)
-    //         texture_rect.top += 100;
-    // }
+            if (!tex_selector->get_active())
+                map->remove_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0);
+    }
 }
 
 void editor_state::update_pause_menu()
@@ -160,6 +146,8 @@ void editor_state::button_handler()
 {
     if (p_menu->is_button_pressed("QUIT") && pt.pressable_button())
         end_state();
+    else if (p_menu->is_button_pressed("SAVE") && pt.pressable_button())
+        map->save_tilemap("savefile.txt");
 }
 
 void editor_state::update(const float &dt)
@@ -192,6 +180,8 @@ void editor_state::render_gui(sf::RenderTarget &target)
 
     tex_selector->render(target);
     target.draw(mouse_text);
+
+    target.draw(sidebar);
 }
 
 void editor_state::render(sf::RenderTarget *target)

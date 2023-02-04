@@ -1,9 +1,10 @@
 #include "../Headers/pch.h"
 #include "../Headers/Tilemap.hpp"
 
-tilemap::tilemap(float _grid_size, unsigned width, unsigned height)
+tilemap::tilemap(float _grid_size, unsigned width, unsigned height, const std::string texture_file)
 {
     init_textures();
+    this->texture_file = texture_file;
 
     map_size.x = width;
     map_size.y = height;
@@ -35,7 +36,7 @@ tilemap::tilemap(float _grid_size, unsigned width, unsigned height)
 void tilemap::init_textures()
 {
     if (!tile_sheet.loadFromFile("../Assets/tiles/tilesheet1.png"))
-        throw("ERROR::TILEMAP::FAILED TO LOAD FILE grass.png\n");
+        throw("ERROR::TILEMAP::FAILED TO LOAD FILE: " + texture_file + '\n');
 }
 
 void tilemap::update() {}
@@ -78,6 +79,36 @@ void tilemap::remove_tile(const unsigned x, const unsigned y, const unsigned lay
         std::cout << "Deleted tile at " << x << ' ' << y << '\n';
     }
 }
+
+void tilemap::save_tilemap(const std::string file_name)
+{
+    std::ofstream ofs;
+    ofs.open(file_name.c_str());
+    if (!ofs.is_open())
+        throw("ERROR::TILEMAP::COULDN'T SAVE TILEMAP TO FILE.\n");
+
+    ofs << map_size.x << ' ' << map_size.y << '\n'
+        << grid_sizeu << '\n'
+        << layers << '\n'
+        << texture_file << '\n';
+
+    for (size_t x = 0; x < map_size.x; ++x)
+    {
+        for (size_t y = 0; y < map_size.y; ++y)
+        {
+            for (size_t z = 0; z < layers; ++z)
+            {
+                ofs << 1 << 1 << 2 << 3 << 5 << ' ';
+                // ofs << map[x][y][z];
+            }
+        }
+        ofs << '\n';
+    }
+
+    ofs.close();
+}
+
+void tilemap::load_tilemap(const std::string file_name) {}
 
 const sf::Texture *tilemap::get_tilesheet() const
 {
