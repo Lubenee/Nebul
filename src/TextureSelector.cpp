@@ -20,7 +20,7 @@ texture_selector::texture_selector(const float _x, const float _y,
     bounds.setOutlineColor(sf::Color(255, 255, 255, 100));
 
     sheet.setTexture(texture_sheet);
-    sheet.setPosition(_x + offset, _y + offset);
+    sheet.setPosition(_x + offset, _y);
 
     if (sheet.getGlobalBounds().width > bounds.getGlobalBounds().width)
         sheet.setTextureRect(sf::IntRect(0, 0, bounds.getGlobalBounds().width, sheet.getGlobalBounds().height));
@@ -28,7 +28,7 @@ texture_selector::texture_selector(const float _x, const float _y,
     if (sheet.getGlobalBounds().height > bounds.getGlobalBounds().height)
         sheet.setTextureRect(sf::IntRect(0, 0, sheet.getGlobalBounds().width, bounds.getGlobalBounds().height));
 
-    selector.setPosition(_x + offset, _y + offset);
+    selector.setPosition(_x + offset, _y);
     selector.setSize(sf::Vector2f(grid_size, grid_size));
     selector.setFillColor(sf::Color::Transparent);
     selector.setOutlineThickness(-1.f);
