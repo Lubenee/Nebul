@@ -33,6 +33,7 @@ protected:
     sf::Vector2i mouse_pos_screen;
     sf::Vector2i mouse_pos_window;
     sf::Vector2f mouse_pos_view;
+    sf::Vector2i mouse_pos_grid;
 
     /* Resources */
     std::map<std::string, sf::Texture> textures;

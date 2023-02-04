@@ -10,10 +10,15 @@ editor_state::editor_state(state_data *_state_data)
     init_background();
     init_tilemap();
     init_pause_menu();
+    init_gui();
 }
 
 void editor_state::init_gui()
 {
+    selector.setFillColor(sf::Color::Transparent);
+    selector.setSize(sf::Vector2f(state_details->grid_size, state_details->grid_size));
+    selector.setOutlineThickness(-1.f);
+    selector.setOutlineColor(sf::Color(50, 200, 20, 255));
 }
 
 void editor_state::init_pause_menu()
@@ -67,6 +72,11 @@ void editor_state::update_buttons()
         i.second->update(mouse_pos_view);
 }
 
+void editor_state::update_gui()
+{
+    selector.setPosition(mouse_pos_view);
+}
+
 void editor_state::update_input(const float &dt)
 {
     update_mouse_pos();
@@ -88,16 +98,28 @@ void editor_state::button_handler()
 void editor_state::update(const float &dt)
 {
     update_input(dt);
-    update_buttons();
-    button_handler();
     if (paused)
+    {
+        button_handler();
         update_pause_menu();
+    }
+    else
+    {
+
+        update_buttons();
+        update_gui();
+    }
 }
 
 void editor_state::render_buttons(sf::RenderTarget &target)
 {
     for (auto &i : buttons)
         i.second->render(target);
+}
+
+void editor_state::render_gui(sf::RenderTarget &target)
+{
+    target.draw(selector);
 }
 
 void editor_state::render(sf::RenderTarget *target)
@@ -107,6 +129,7 @@ void editor_state::render(sf::RenderTarget *target)
 
     render_buttons(*target);
     map->render(*target);
+    render_gui(*target);
 
     if (paused)
         p_menu->render(*target);

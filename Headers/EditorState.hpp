@@ -28,12 +28,14 @@ private:
     void init_pause_menu();
     void init_gui();
 
+    void update_gui();
     void update_input(const float &dt);
     void update_buttons();
     void button_handler();
     void update_pause_menu();
 
     void render_buttons(sf::RenderTarget &target);
+    void render_gui(sf::RenderTarget &target);
 
 private:
     sf::Font font;
