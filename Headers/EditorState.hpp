@@ -1,0 +1,49 @@
+#ifndef EDITOR_STATE_H
+#define EDITOR_STATE_H
+#include "State.hpp"
+#include "Tilemap.hpp"
+#include "PauseMenu.hpp"
+
+class state;
+class pause_menu;
+class tilemap;
+
+class editor_state : public state
+{
+public:
+    editor_state(state_data *_state_data);
+
+    void update(const float &dt);
+
+    void render(sf::RenderTarget *target = nullptr);
+
+    virtual ~editor_state();
+
+private:
+    void init_keybinds();
+    void init_fonts();
+    void init_buttons();
+    void init_background();
+    void init_tilemap();
+    void init_pause_menu();
+    void init_gui();
+
+    void update_input(const float &dt);
+    void update_buttons();
+    void button_handler();
+    void update_pause_menu();
+
+    void render_buttons(sf::RenderTarget &target);
+
+private:
+    sf::Font font;
+
+    tilemap *map;
+    GUI::max_press_time pt;
+    std::map<std::string, GUI::button *> buttons;
+    pause_menu *p_menu;
+
+    sf::RectangleShape selector;
+};
+
+#endif
