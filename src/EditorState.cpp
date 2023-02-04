@@ -11,14 +11,23 @@ editor_state::editor_state(state_data *_state_data)
     init_tilemap();
     init_pause_menu();
     init_gui();
+    init_text();
 }
 
 void editor_state::init_gui()
 {
-    selector.setFillColor(sf::Color::Transparent);
+    selector.setFillColor(sf::Color(200, 200, 200, 125));
     selector.setSize(sf::Vector2f(state_details->grid_size, state_details->grid_size));
     selector.setOutlineThickness(-1.f);
     selector.setOutlineColor(sf::Color(50, 200, 20, 255));
+    selector.setTexture(map->get_tilesheet());
+}
+
+void editor_state::init_text()
+{
+    mouse_text.setFont(font);
+    mouse_text.setCharacterSize(10);
+    mouse_text.setFillColor(sf::Color::White);
 }
 
 void editor_state::init_pause_menu()
@@ -28,7 +37,8 @@ void editor_state::init_pause_menu()
 
 void editor_state::init_tilemap()
 {
-    map = new tilemap(state_details->grid_size, 10, 10);
+    map = new tilemap(state_details->grid_size, 100, 100);
+    texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
 }
 
 void editor_state::init_keybinds()
@@ -56,14 +66,6 @@ void editor_state::init_background()
 
 void editor_state::init_buttons()
 {
-    // buttons["GAME_STATE"] = new button(320.f, 140.f, 197.f, 40.f,
-    //                                    "New Game", &font, 30,
-    //                                    sf::Color(150, 150, 150, 200),
-    //                                    sf::Color(250, 250, 250, 250),
-    //                                    sf::Color(40, 40, 40, 80),
-    //                                    sf::Color(70, 70, 70, 100),
-    //                                    sf::Color(150, 150, 150, 100),
-    //                                    sf::Color(20, 20, 20, 100));
 }
 
 void editor_state::update_buttons()
@@ -74,7 +76,16 @@ void editor_state::update_buttons()
 
 void editor_state::update_gui()
 {
-    selector.setPosition(mouse_pos_view);
+    // for snappy selection
+    selector.setPosition(mouse_pos_grid.x * state_details->grid_size, mouse_pos_grid.y * state_details->grid_size);
+    selector.setTextureRect(texture_rect);
+
+    mouse_text.setPosition(mouse_pos_view.x - mouse_text_offset, mouse_pos_view.y);
+    std::stringstream ss;
+    ss << mouse_pos_view.x << ' ' << mouse_pos_view.y << '\n'
+       << mouse_pos_grid.x << ' ' << mouse_pos_grid.y << '\n'
+       << texture_rect.left << ' ' << texture_rect.top;
+    mouse_text.setString(ss.str());
 }
 
 void editor_state::update_input(const float &dt)
@@ -82,6 +93,36 @@ void editor_state::update_input(const float &dt)
     update_mouse_pos();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["CLOSE"])) && pressable_button())
         paused = (paused == true ? false : true);
+}
+
+void editor_state::update_editor_input()
+{
+    // Add a new tile
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+        map->add_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, texture_rect);
+    else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+        map->remove_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && pressable_button())
+    {
+        if (texture_rect.left < 700)
+            texture_rect.left += 100;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && pressable_button())
+    {
+        if (texture_rect.left >= 100)
+            texture_rect.left -= 100;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && pressable_button())
+    {
+        if (texture_rect.top >= 100)
+            texture_rect.top -= 100;
+    }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && pressable_button())
+    {
+        if (texture_rect.top < 100)
+            texture_rect.top += 100;
+    }
 }
 
 void editor_state::update_pause_menu()
@@ -105,9 +146,9 @@ void editor_state::update(const float &dt)
     }
     else
     {
-
         update_buttons();
         update_gui();
+        update_editor_input();
     }
 }
 
@@ -120,6 +161,7 @@ void editor_state::render_buttons(sf::RenderTarget &target)
 void editor_state::render_gui(sf::RenderTarget &target)
 {
     target.draw(selector);
+    target.draw(mouse_text);
 }
 
 void editor_state::render(sf::RenderTarget *target)

@@ -14,7 +14,6 @@ public:
     editor_state(state_data *_state_data);
 
     void update(const float &dt);
-
     void render(sf::RenderTarget *target = nullptr);
 
     virtual ~editor_state();
@@ -23,6 +22,7 @@ private:
     void init_keybinds();
     void init_fonts();
     void init_buttons();
+    void init_text();
     void init_background();
     void init_tilemap();
     void init_pause_menu();
@@ -31,6 +31,7 @@ private:
     void update_gui();
     void update_input(const float &dt);
     void update_buttons();
+    void update_editor_input();
     void button_handler();
     void update_pause_menu();
 
@@ -39,6 +40,8 @@ private:
 
 private:
     sf::Font font;
+    sf::Text mouse_text;
+    static const unsigned mouse_text_offset = 60;
 
     tilemap *map;
     GUI::max_press_time pt;
@@ -46,6 +49,8 @@ private:
     pause_menu *p_menu;
 
     sf::RectangleShape selector;
+
+    sf::IntRect texture_rect;
 };
 
 #endif

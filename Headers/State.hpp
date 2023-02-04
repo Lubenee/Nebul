@@ -49,7 +49,7 @@ protected:
     bool paused;
     bool quit;
 
-    static const sf::Int32 key_time_max_miliseconds = 450;
+    static const sf::Int32 key_time_max_miliseconds = 350;
     sf::Clock key_timer;
 
     std::map<std::string, int> *supported_keys;

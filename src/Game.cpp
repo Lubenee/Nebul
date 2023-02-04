@@ -2,7 +2,7 @@
 #include "../Headers/Game.hpp"
 
 game::game()
-    : grid_size(50.f)
+    : grid_size(100.f)
 {
     // Order!!
     gfx.load_from_file("../Config/window.ini");
@@ -79,7 +79,6 @@ void game::update_sfml_events()
     while (window->pollEvent(event))
         if (event.type == sf::Event::Closed)
             window->close();
-
 }
 
 void game::update_delta_time()
