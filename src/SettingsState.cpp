@@ -55,7 +55,7 @@ void settings_state::init_gui()
 
   drop_lists["RESOLUTION"] = new GUI::drop_down_box(
       400, 137, 200, 50, font, list, current_resolution_index);
-} // 137
+}
 
 void settings_state::init_keybinds()
 {
@@ -90,20 +90,27 @@ void settings_state::init_background()
 
 void settings_state::update_gui()
 {
-  for (auto &i : buttons)
-    i.second->update(mouse_pos_view);
+  if (!drop_lists["RESOLUTION"]->get_active())
+    for (auto &i : buttons)
+      i.second->update(mouse_pos_view);
   for (auto &i : drop_lists)
     i.second->update(mouse_pos_view);
+}
+
+void settings_state::update_collision_timer()
+{
+  if (drop_lists["RESOLUTION"]->get_active())
+    button_collision_timer.restart();
 }
 
 void settings_state::update_input(const float &dt) { update_mouse_pos(); }
 
 void settings_state::button_handler()
 {
-  if (buttons["BACK"]->pressed())
+  if (buttons["BACK"]->pressed() && valid_button_collision())
     end_state();
 
-  else if (buttons["APPLY"]->pressed())
+  else if (buttons["APPLY"]->pressed() && valid_button_collision())
   {
     if (state_details->gfx_settings->resolution.width !=
             vms[drop_lists["RESOLUTION"]->get_active_elem_id()].width &&
@@ -130,6 +137,7 @@ void settings_state::button_handler()
 
 void settings_state::update(const float &dt)
 {
+  update_collision_timer();
   update_input(dt);
   update_gui();
   button_handler();
@@ -137,6 +145,7 @@ void settings_state::update(const float &dt)
 
 void settings_state::render_gui(sf::RenderTarget &target)
 {
+
   for (auto &i : buttons)
     i.second->render(target);
 
@@ -162,6 +171,11 @@ void settings_state::render(sf::RenderTarget *target)
   ss << mouse_pos_view.x << ' ' << mouse_pos_view.y;
   t.setString(ss.str());
   target->draw(t);
+}
+
+bool settings_state::valid_button_collision()
+{
+  return button_collision_timer.getElapsedTime().asMilliseconds() > this->key_time_max_miliseconds + 50 ? true : false;
 }
 
 settings_state::~settings_state()

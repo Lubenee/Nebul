@@ -5,7 +5,7 @@
 class settings_state : public state
 {
 public:
-    settings_state(state_data* _state_data);
+    settings_state(state_data *_state_data);
     void init_keybinds();
     void init_fonts();
     void init_background();
@@ -15,6 +15,14 @@ public:
     /* Renders any GUI related compoments that the class has.*/
     void update_gui();
     void update_input(const float &dt);
+
+    /* In order to avoid clicking on a drop menu button and then
+        accidentally activating some regular button behind it,
+        this timer checks if enough time has passed after selecting something
+        from the drop menu.
+    */
+    void update_collision_timer();
+    bool valid_button_collision();
 
     /* Gives different buttons functionality. */
     void button_handler();
@@ -34,6 +42,13 @@ private:
 
     std::map<std::string, GUI::button *> buttons;
     std::map<std::string, GUI::drop_down_box *> drop_lists;
+
+    /* In order to avoid clicking on a drop menu button and then
+        accidentally activating some regular button behind it,
+        this timer checks if enough time has passed after selecting something
+        from the drop menu.
+    */
+    sf::Clock button_collision_timer;
 
     sf::Text options_text;
 

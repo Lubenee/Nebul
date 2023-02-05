@@ -81,6 +81,11 @@ const unsigned short drop_down_box::get_active_elem_id() const
   return active_elem->get_id();
 }
 
+const bool drop_down_box::get_active() const
+{
+  return show_menu;
+}
+
 drop_down_box::~drop_down_box()
 {
   delete active_elem;

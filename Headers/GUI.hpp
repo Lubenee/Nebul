@@ -95,6 +95,7 @@ namespace GUI
     void render(sf::RenderTarget &target);
 
     const unsigned short get_active_elem_id() const;
+    const bool get_active() const;
 
     ~drop_down_box();
 
@@ -141,4 +142,5 @@ namespace GUI
     max_press_time pt;
   };
 } // namespace GUI
+
 #endif
