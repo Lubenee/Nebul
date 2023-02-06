@@ -65,8 +65,9 @@ void pause_menu::render(sf::RenderTarget &target)
 void pause_menu::add_button(const std::string &key, float y, const std::string &text)
 {
     float width = 200.f;
+    float height = 65.f;
     float x = container.getPosition().x + container.getSize().x / 2.f - width / 2.f;
-    buttons[key] = new GUI::button(x, y, 200.f, 40.f,
+    buttons[key] = new GUI::button(x, y, width, height,
                                    text, &font, 30,
                                    sf::Color(150, 150, 150, 200),
                                    sf::Color(250, 250, 250, 250),

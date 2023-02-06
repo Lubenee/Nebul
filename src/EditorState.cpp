@@ -41,11 +41,12 @@ void editor_state::init_pause_menu()
 {
     p_menu = new pause_menu(*window, font);
     p_menu->add_button("SAVE", 190.f, "Save");
+    p_menu->add_button("LOAD", 260.f, "Load");
 }
 
 void editor_state::init_tilemap()
 {
-    map = new tilemap(state_details->grid_size, 100, 100, "../Assets/tiles/tilesheet1.png");
+    map = new tilemap(state_details->grid_size, 35, 35, "../Assets/tiles/tilesheet1.png");
     texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
 }
 
@@ -147,7 +148,9 @@ void editor_state::button_handler()
     if (p_menu->is_button_pressed("QUIT") && pt.pressable_button())
         end_state();
     else if (p_menu->is_button_pressed("SAVE") && pt.pressable_button())
-        map->save_tilemap("savefile.txt");
+        map->save_tilemap("savefile.sav");
+    else if (p_menu->is_button_pressed("LOAD") && pt.pressable_button())
+        map->load_tilemap("savefile.sav");
 }
 
 void editor_state::update(const float &dt)

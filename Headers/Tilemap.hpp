@@ -17,18 +17,20 @@ public:
     /*
         Saves the entire tilemap to a text file.
         Format:
-            ->size x, y
-            ->grid size
-            ->layers
-            ->texture file
-            ->grid position x, y (of all tiles)
+        Map parameters:
+            ->Max size: X and Y
+            ->Cell size (or grid size)
+            ->Number of layers
+            ->Texture sheet file name(string)
 
-            ->grid position x,y; Texture rect x, y, type
+        Individual Tiles:
+            ->Position: X and Y; Layer number; Texture rectangle; collision; tile type;
     */
     void save_tilemap(const std::string file_name);
     void load_tilemap(const std::string file_name);
 
     const sf::Texture *get_tilesheet() const;
+    void clear_map();
 
     ~tilemap();
 

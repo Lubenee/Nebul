@@ -1,16 +1,22 @@
 #include "../Headers/pch.h"
 #include "../Headers/Tile.hpp"
 
-tile::tile(float x, float y, float grid_size, sf::Texture &_tex, const sf::IntRect &_rect)
+tile::tile()
+{
+    collision = false;
+    type = -1;
+}
+
+tile::tile(size_t x, size_t y, float grid_size,
+           sf::Texture &_tex, const sf::IntRect &_rect,
+           bool collision, short type)
 {
     shape.setSize(sf::Vector2f(grid_size, grid_size));
-    shape.setPosition(x, y);
+    shape.setPosition(x * grid_size, y * grid_size);
     shape.setTexture(&_tex);
     shape.setTextureRect(_rect);
-
-    // shape.setFillColor(sf::Color::Green);
-    // shape.setOutlineThickness(-1.f);
-    // shape.setOutlineColor(sf::Color::Black);
+    this->collision = collision;
+    this->type = type;
 }
 
 void tile::update() {}
@@ -18,6 +24,23 @@ void tile::update() {}
 void tile::render(sf::RenderTarget &target)
 {
     target.draw(shape);
+}
+
+const std::string tile::get_as_string() const
+{
+    std::stringstream ss;
+    ss << shape.getTextureRect().left << ' '
+       << shape.getTextureRect().top << ' '
+       << collision << ' ' << type;
+    return ss.str();
+}
+
+std::ostream &operator<<(std::ostream &os, const tile &tile)
+{
+    os << tile.shape.getTextureRect().left << ' '
+       << tile.shape.getTextureRect().top << ' '
+       << tile.collision << ' ' << tile.type;
+    return os;
 }
 
 tile::~tile() {}
