@@ -50,7 +50,7 @@ void tilemap::render(sf::RenderTarget &target)
                     tile->render(target);
 }
 
-void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect)
+void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool &collision, const short &type)
 {
     if (!(x < map_size.x && x >= 0 &&
           y < map_size.y && y >= 0 &&
@@ -59,8 +59,8 @@ void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer,
 
     if (map[x][y][layer] == nullptr)
     {
-        /* OK to add a new tile. */
-        map[x][y][layer] = new tile(x, y, grid_sizef, tile_sheet, _rect);
+        /* albe to add a new tile. */
+        map[x][y][layer] = new tile(x, y, grid_sizef, tile_sheet, _rect, collision, type);
     }
 }
 

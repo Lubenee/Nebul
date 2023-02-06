@@ -122,6 +122,8 @@ namespace GUI
     void render(sf::RenderTarget &target);
 
     const bool get_active() const;
+    const bool get_hidden() const;
+    void set_hidden(bool _state);
     const sf::IntRect &get_texture_rect() const;
 
     ~texture_selector();
@@ -142,15 +144,16 @@ namespace GUI
     max_press_time pt;
   };
 
-  class check_box {
+  class check_box
+  {
   public:
-    check_box(float x, float y, 
+    check_box(float x, float y,
               float width, float height,
               sf::Color inactive_color,
-              sf::Color hover_color, 
+              sf::Color hover_color,
               sf::Color active_color);
     void update(const sf::Vector2f mouse_pos);
-    void render(sf::RenderTarget& target);
+    void render(sf::RenderTarget &target);
 
     void set_active();
 
@@ -167,8 +170,6 @@ namespace GUI
     sf::Color active_color;
 
     max_press_time pt;
-  
-
   };
 } // namespace GUI
 

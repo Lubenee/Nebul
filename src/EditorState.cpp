@@ -46,6 +46,8 @@ void editor_state::init_pause_menu()
 
 void editor_state::init_tilemap()
 {
+    tile_collision = false;
+    tile_type = tt::DEFAULT;
     map = new tilemap(state_details->grid_size, 35, 35, "../Assets/tiles/tilesheet1.png");
     texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
 }
@@ -105,7 +107,9 @@ void editor_state::update_gui()
     std::stringstream ss;
     ss << mouse_pos_view.x << ' ' << mouse_pos_view.y << '\n'
        << mouse_pos_grid.x << ' ' << mouse_pos_grid.y << '\n'
-       << texture_rect.left << ' ' << texture_rect.top;
+       << texture_rect.left << ' ' << texture_rect.top << '\n'
+       << "Collision: " << tile_collision << '\n'
+       << "Type: " << tile_type;
     mouse_text.setString(ss.str());
 }
 
@@ -114,6 +118,18 @@ void editor_state::update_input(const float &dt)
     update_mouse_pos();
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["CLOSE"])) && pressable_button())
         paused = (paused == true ? false : true);
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["TOGGLE_COLLISION"])) && pressable_button())
+        tile_collision = tile_collision == true ? false : true;
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["INCREASE_TYPE"])) && pressable_button())
+        ++tile_type;
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["DECREASE_TYPE"])) && pressable_button())
+    {
+        if (tile_type > 0)
+            --tile_type;
+    }
+
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["TOGGLE_TEX_SHEET"])) && pressable_button())
+        tex_selector->get_hidden() == true ? tex_selector->set_hidden(false) : tex_selector->set_hidden(true);
 }
 
 void editor_state::update_editor_input()
@@ -124,7 +140,7 @@ void editor_state::update_editor_input()
         if (!sidebar.getGlobalBounds().contains(sf::Vector2f(mouse_pos_view)))
         {
             if (!tex_selector->get_active())
-                map->add_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, texture_rect);
+                map->add_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, texture_rect, tile_collision, tile_type);
             else
                 texture_rect = tex_selector->get_texture_rect();
         }
@@ -134,7 +150,7 @@ void editor_state::update_editor_input()
         if (!sidebar.getGlobalBounds().contains(sf::Vector2f(mouse_pos_view)))
 
             if (!tex_selector->get_active())
-                map->remove_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0);
+                map->remove_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, tile_type);
     }
 }
 

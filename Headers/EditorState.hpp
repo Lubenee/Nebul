@@ -4,10 +4,6 @@
 #include "Tilemap.hpp"
 #include "PauseMenu.hpp"
 
-class state;
-class pause_menu;
-class tilemap;
-
 class editor_state : public state
 {
 public:
@@ -44,6 +40,9 @@ private:
     static const unsigned mouse_text_offset = 60;
 
     tilemap *map;
+    bool tile_collision;
+    short tile_type;
+
     GUI::max_press_time pt;
     std::map<std::string, GUI::button *> buttons;
     pause_menu *p_menu;

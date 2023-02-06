@@ -13,7 +13,7 @@ class tile
 public:
     tile();
     tile(size_t x, size_t y, float grid_size, sf::Texture &_tex, const sf::IntRect &_rect,
-         bool collision = 0, short type = tt::DEFAULT);
+         bool collision = false, short type = tt::DEFAULT);
 
     void update();
     void render(sf::RenderTarget &target);

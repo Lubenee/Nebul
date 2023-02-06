@@ -88,7 +88,17 @@ void texture_selector::render(sf::RenderTarget &target)
 
 const bool texture_selector::get_active() const
 {
-    return this->active;
+    return active;
+}
+
+const bool texture_selector::get_hidden() const
+{
+    return hidden;
+}
+
+void texture_selector::set_hidden(bool _state)
+{
+    hidden = _state;
 }
 
 const sf::IntRect &texture_selector::get_texture_rect() const

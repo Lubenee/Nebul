@@ -26,6 +26,11 @@ void tile::render(sf::RenderTarget &target)
     target.draw(shape);
 }
 
+const short tile::get_type() const
+{
+    return type;
+}
+
 const std::string tile::get_as_string() const
 {
     std::stringstream ss;
