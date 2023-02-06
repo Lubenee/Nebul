@@ -49,7 +49,7 @@ namespace GUI
     ~button();
 
     /*Updates the state for hovered and active button*/
-    void update(const sf::Vector2f &mouse_pos);
+    void update(const sf::Vector2i &mouse_pos);
     void render(sf::RenderTarget &target);
 
     const bool pressed() const;
@@ -91,7 +91,7 @@ namespace GUI
                   const std::vector<std::string> elem_list,
                   const unsigned default_index = 0);
 
-    void update(const sf::Vector2f &mouse_pos);
+    void update(const sf::Vector2i &mouse_pos);
     void render(sf::RenderTarget &target);
 
     const unsigned short get_active_elem_id() const;

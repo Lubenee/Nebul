@@ -8,7 +8,7 @@ class pause_menu
 public:
     pause_menu(sf::RenderWindow &window, sf::Font &_font);
 
-    void update(const sf::Vector2f &mouse_pos);
+    void update(const sf::Vector2i &mouse_pos);
     void render(sf::RenderTarget &target);
 
     std::map<std::string, GUI::button *> &get_buttons();

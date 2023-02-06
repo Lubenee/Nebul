@@ -96,9 +96,9 @@ void settings_state::update_gui()
 {
   if (!drop_lists["RESOLUTION"]->get_active())
     for (auto &i : buttons)
-      i.second->update(mouse_pos_view);
+      i.second->update(mouse_pos_window);
   for (auto &i : drop_lists)
-    i.second->update(mouse_pos_view);
+    i.second->update(mouse_pos_window);
 }
 
 void settings_state::update_collision_timer()

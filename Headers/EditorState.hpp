@@ -23,6 +23,7 @@ private:
     void init_tilemap();
     void init_pause_menu();
     void init_gui();
+    void init_view();
 
     void update_gui();
     void update_input(const float &dt);
@@ -40,6 +41,7 @@ private:
     static const unsigned mouse_text_offset = 60;
 
     tilemap *map;
+    sf::IntRect texture_rect;
     bool tile_collision;
     short tile_type;
 
@@ -51,7 +53,8 @@ private:
     GUI::texture_selector *tex_selector;
     sf::RectangleShape sidebar;
 
-    sf::IntRect texture_rect;
+    sf::View view;
+    const float cam_speed;
 };
 
 #endif

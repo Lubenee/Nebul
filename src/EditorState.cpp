@@ -2,7 +2,7 @@
 #include "../Headers/EditorState.hpp"
 
 editor_state::editor_state(state_data *_state_data)
-    : state(_state_data)
+    : state(_state_data), cam_speed(400.f)
 {
     init_keybinds();
     init_fonts();
@@ -12,6 +12,15 @@ editor_state::editor_state(state_data *_state_data)
     init_pause_menu();
     init_gui();
     init_text();
+    init_view();
+}
+
+void editor_state::init_view()
+{
+    view.setSize(state_details->gfx_settings->resolution.width, state_details->gfx_settings->resolution.height);
+    view.setCenter(
+        state_details->gfx_settings->resolution.width / 2.f,
+        state_details->gfx_settings->resolution.height / 2.f);
 }
 
 void editor_state::init_gui()
@@ -50,6 +59,7 @@ void editor_state::init_tilemap()
     tile_type = tt::DEFAULT;
     map = new tilemap(state_details->grid_size, 35, 35, "../Assets/tiles/tilesheet1.png");
     texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
+    map->load_tilemap("savefile.sav");
 }
 
 void editor_state::init_keybinds()
@@ -83,7 +93,7 @@ void editor_state::init_buttons()
 void editor_state::update_buttons()
 {
     for (auto &i : buttons)
-        i.second->update(mouse_pos_view);
+        i.second->update(mouse_pos_window);
 
     std::stringstream ss;
     ss << mouse_pos_view.x << ' ' << mouse_pos_view.y << '\n'
@@ -115,7 +125,7 @@ void editor_state::update_gui()
 
 void editor_state::update_input(const float &dt)
 {
-    update_mouse_pos();
+    update_mouse_pos(&view);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["CLOSE"])) && pressable_button())
         paused = (paused == true ? false : true);
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["TOGGLE_COLLISION"])) && pressable_button())
@@ -127,9 +137,17 @@ void editor_state::update_input(const float &dt)
         if (tile_type > 0)
             --tile_type;
     }
-
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["TOGGLE_TEX_SHEET"])) && pressable_button())
         tex_selector->get_hidden() == true ? tex_selector->set_hidden(false) : tex_selector->set_hidden(true);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_RIGHT"])))
+        view.move(cam_speed * dt, 0.f);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_LEFT"])))
+        view.move(-cam_speed * dt, 0.f);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_UP"])))
+        view.move(0, -cam_speed * dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_DOWN"])))
+        view.move(0, cam_speed * dt);
 }
 
 void editor_state::update_editor_input()
@@ -148,7 +166,6 @@ void editor_state::update_editor_input()
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
     {
         if (!sidebar.getGlobalBounds().contains(sf::Vector2f(mouse_pos_view)))
-
             if (!tex_selector->get_active())
                 map->remove_tile(mouse_pos_grid.x, mouse_pos_grid.y, 0, tile_type);
     }
@@ -156,7 +173,7 @@ void editor_state::update_editor_input()
 
 void editor_state::update_pause_menu()
 {
-    p_menu->update(mouse_pos_view);
+    p_menu->update(mouse_pos_window);
 }
 
 void editor_state::button_handler()
@@ -195,12 +212,17 @@ void editor_state::render_buttons(sf::RenderTarget &target)
 void editor_state::render_gui(sf::RenderTarget &target)
 {
     if (!tex_selector->get_active())
+    {
+        target.setView(view);
         target.draw(selector);
+    }
 
+    target.setView(window->getDefaultView());
     tex_selector->render(target);
-    target.draw(mouse_text);
-
     target.draw(sidebar);
+
+    target.setView(view);
+    target.draw(mouse_text);
 }
 
 void editor_state::render(sf::RenderTarget *target)
@@ -208,12 +230,18 @@ void editor_state::render(sf::RenderTarget *target)
     if (!target)
         target = window;
 
-    render_buttons(*target);
+    target->setView(view);
     map->render(*target);
+    target->setView(window->getDefaultView());
+
+    render_buttons(*target);
     render_gui(*target);
 
     if (paused)
+    {
+        target->setView(window->getDefaultView());
         p_menu->render(*target);
+    }
 }
 
 editor_state::~editor_state()

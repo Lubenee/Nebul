@@ -9,6 +9,30 @@ game_state::game_state(state_data *_state_data)
     init_player();
     init_pause_menu();
     init_map();
+    init_view();
+    init_render_canvas();
+}
+
+void game_state::init_render_canvas()
+{
+    render_texture.create(
+        state_details->gfx_settings->resolution.width,
+        state_details->gfx_settings->resolution.height);
+
+    render_sprite.setTexture(render_texture.getTexture());
+    render_sprite.setTextureRect(sf::IntRect(0, 0, state_details->gfx_settings->resolution.width,
+                                             state_details->gfx_settings->resolution.height));
+}
+
+void game_state::init_view()
+{
+    view.setSize(
+        state_details->gfx_settings->resolution.width,
+        state_details->gfx_settings->resolution.height);
+
+    view.setCenter(
+        state_details->gfx_settings->resolution.width / 2.f,
+        state_details->gfx_settings->resolution.height / 2.f);
 }
 
 void game_state::init_pause_menu()
@@ -18,7 +42,8 @@ void game_state::init_pause_menu()
 
 void game_state::init_map()
 {
-    // map = new tilemap(state_details->grid_size, 10, 10, "../Assets/tiles/tilesheet1.png");
+    map = new tilemap(state_details->grid_size, 35, 35, "../Assets/tiles/tilesheet1.png");
+    map->load_tilemap("savefile.sav");
 }
 
 void game_state::init_player()
@@ -56,25 +81,9 @@ void game_state::update_menu_buttons()
 
 void game_state::update_input(const float &dt)
 {
-    update_mouse_pos();
+    update_mouse_pos(&view);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["PAUSE"])) && pressable_button())
         paused == false ? set_pause(true) : set_pause(false);
-}
-
-void game_state::update(const float &dt)
-{
-    update_input(dt);
-
-    if (!paused)
-    {
-        plr->update(dt);
-        update_player_input(dt);
-    }
-    else if (paused)
-    {
-        p_menu->update(mouse_pos_view);
-        update_menu_buttons();
-    }
 }
 
 void game_state::update_player_input(const float &dt)
@@ -89,17 +98,49 @@ void game_state::update_player_input(const float &dt)
         plr->move(0.f, 1.f, dt);
 }
 
+void game_state::update_view(const float &dt)
+{
+    view.setCenter(plr->get_pos());
+}
+
+void game_state::update(const float &dt)
+{
+    update_input(dt);
+
+    if (!paused)
+    {
+        update_view(dt);
+        plr->update(dt);
+        update_player_input(dt);
+    }
+    else if (paused)
+    {
+        p_menu->update(mouse_pos_window);
+        update_menu_buttons();
+    }
+}
+
 void game_state::render(sf::RenderTarget *target)
 {
     if (!target)
         target = window;
 
-    // map->render(*target);
+    render_texture.clear();
 
-    plr->render(*target);
+    render_texture.setView(view);
+    map->render(render_texture);
+
+    plr->render(render_texture);
 
     if (paused)
-        p_menu->render(*target);
+    {
+        render_texture.setView(render_texture.getDefaultView());
+        p_menu->render(render_texture);
+    }
+
+    // Final render
+    render_texture.display();
+    target->draw(render_sprite);
 }
 
 game_state::~game_state()

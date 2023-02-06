@@ -11,7 +11,6 @@ main_menu_state::main_menu_state(state_data *state_data)
     init_background();
 }
 
-
 void main_menu_state::init_keybinds()
 {
     std::ifstream ifs;
@@ -83,7 +82,7 @@ void main_menu_state::init_buttons()
 void main_menu_state::update_buttons()
 {
     for (auto &i : buttons)
-        i.second->update(mouse_pos_view);
+        i.second->update(mouse_pos_window);
 }
 void main_menu_state::update_input(const float &dt)
 {

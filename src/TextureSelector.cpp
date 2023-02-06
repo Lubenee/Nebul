@@ -44,7 +44,7 @@ texture_selector::texture_selector(const float _x, const float _y,
 
 void texture_selector::update(const sf::Vector2i &mouse_pos_window)
 {
-    hide_button->update(static_cast<sf::Vector2f>(mouse_pos_window));
+    hide_button->update(mouse_pos_window);
 
     if (hide_button->pressed() && pt.pressable_button())
         hidden = (hidden == true ? false : true);

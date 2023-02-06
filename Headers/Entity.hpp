@@ -19,6 +19,8 @@ public:
     virtual void set_pos(const float _x, const float _y);
     virtual void move(const float _x, const float _y, const float &dt);
 
+    virtual const sf::Vector2f &get_pos() const;
+
     virtual ~entity();
 
 protected:

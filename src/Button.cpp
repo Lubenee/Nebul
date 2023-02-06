@@ -51,10 +51,10 @@ button::button(float x, float y,
 
 button::button() {}
 
-void button::update(const sf::Vector2f &mouse_pos)
+void button::update(const sf::Vector2i &mouse_pos)
 {
   button_state = bs::idle;
-  if (shape.getGlobalBounds().contains(mouse_pos))
+  if (shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_pos)))
   {
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
       button_state = bs::active;

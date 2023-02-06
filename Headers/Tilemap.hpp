@@ -11,8 +11,8 @@ public:
     void render(sf::RenderTarget &target);
 
     /* Takes three indicies from the mouse position in the grid and a tiles to that position if the internal tilemap array allows it .*/
-    void add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect);
-    void remove_tile(const unsigned x, const unsigned y, const unsigned layer);
+    void add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool &collision, const short &type);
+    void remove_tile(const unsigned x, const unsigned y, const unsigned layer, const short &type);
 
     /*
         Saves the entire tilemap to a text file.

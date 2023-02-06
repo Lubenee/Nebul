@@ -18,6 +18,7 @@ public:
     void update();
     void render(sf::RenderTarget &target);
 
+    const short get_type() const;
     const std::string get_as_string() const;
     friend std::ostream &operator<<(std::ostream &os, const tile &tile);
     virtual ~tile();

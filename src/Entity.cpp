@@ -49,6 +49,11 @@ void entity::render(sf::RenderTarget &target)
         hc->render(target);
 }
 
+const sf::Vector2f &entity::get_pos() const
+{
+    return sprite.getPosition();
+}
+
 void entity::set_pos(const float _x, const float _y)
 {
     sprite.setPosition(_x, _y);

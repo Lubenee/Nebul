@@ -39,7 +39,7 @@ void drop_down_box::button_handler()
     show_menu = show_menu ? false : true;
 }
 
-void drop_down_box::update(const sf::Vector2f &mouse_pos)
+void drop_down_box::update(const sf::Vector2i &mouse_pos)
 {
   button_handler();
   active_elem->update(mouse_pos);
@@ -58,7 +58,7 @@ void drop_down_box::update(const sf::Vector2f &mouse_pos)
       }
 
       if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
-          !list_box.getGlobalBounds().contains(mouse_pos))
+          !list_box.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_pos)))
       {
         show_menu = false;
         break;

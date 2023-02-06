@@ -14,14 +14,20 @@ state::state(state_data *_state_data)
     paused = false;
 }
 
-void state::update_mouse_pos()
+void state::update_mouse_pos(const sf::View *view)
 {
     mouse_pos_screen = sf::Mouse::getPosition();
     mouse_pos_window = sf::Mouse::getPosition(*window);
+
+    if (view != nullptr)
+        window->setView(*view);
+
     mouse_pos_view = window->mapPixelToCoords(sf::Mouse::getPosition(*window));
     mouse_pos_grid = sf::Vector2i(
         static_cast<int>(mouse_pos_view.x) / static_cast<int>(grid_size),
         static_cast<int>(mouse_pos_view.y) / static_cast<int>(grid_size));
+
+    window->setView(window->getDefaultView());
 }
 
 const bool &state::get_quit() const

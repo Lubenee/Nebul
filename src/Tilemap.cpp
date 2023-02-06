@@ -64,13 +64,13 @@ void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer,
     }
 }
 
-void tilemap::remove_tile(const unsigned x, const unsigned y, const unsigned layer)
+void tilemap::remove_tile(const unsigned x, const unsigned y, const unsigned layer, const short &type)
 {
     if (!(x < map_size.x && x >= 0 &&
           y < map_size.y && y >= 0 &&
           layer <= layers && layer >= 0))
         return; // Invalid bounds
-    if (map[x][y][layer] != nullptr)
+    if (map[x][y][layer] != nullptr && map[x][y][layer]->get_type() == type)
     {
         /* OK to add a new tile. */
         delete map[x][y][layer];

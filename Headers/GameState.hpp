@@ -4,6 +4,10 @@
 #include "PauseMenu.hpp"
 #include "Tilemap.hpp"
 
+class state;
+class pause_menu;
+class tilemap;
+
 class game_state : public state
 {
 public:
@@ -20,12 +24,22 @@ private:
     void init_player();
     void init_map();
     void init_pause_menu();
+    void init_view();
+    void init_render_canvas();
 
+    void update_view(const float &dt);
     void update_input(const float &dt);
     void update_player_input(const float &dt);
     void update_menu_buttons();
 
 private:
+    sf::View view;
+    /* To remove weird texture glitching and make rendering smoother, everything in the game is first drawn on this sort of canvas texture,
+    and then gets pasted on the screen all at once.*/
+    sf::RenderTexture render_texture;
+    /* This sprite "holds" our canvas. */
+    sf::Sprite render_sprite;
+
     tilemap *map;
     player *plr;
 

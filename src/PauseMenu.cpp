@@ -46,7 +46,7 @@ void pause_menu::init_buttons()
                                       sf::Color(20, 20, 20, 0));
 }
 
-void pause_menu::update(const sf::Vector2f &mouse_pos)
+void pause_menu::update(const sf::Vector2i &mouse_pos)
 {
     for (auto &i : buttons)
         i.second->update(mouse_pos);

@@ -26,7 +26,7 @@ public:
 
 protected:
     virtual void init_keybinds() = 0;
-    virtual void update_mouse_pos();
+    virtual void update_mouse_pos(const sf::View *view = nullptr);
 
 protected:
     /* Mouse pos */
