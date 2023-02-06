@@ -8,6 +8,10 @@ settings_state::settings_state(state_data *_state_data) : state(_state_data)
   init_background();
   init_gui();
   init_text();
+  check = new GUI::check_box(400.f, 210.f, 50, 50,
+                             sf::Color(250, 50, 100, 150),
+                             sf::Color(50, 150, 50, 50),
+                             sf::Color(50, 250, 100, 150));
 }
 
 void settings_state::init_text()
@@ -16,7 +20,7 @@ void settings_state::init_text()
   options_text.setPosition(130, 145);
   options_text.setCharacterSize(30);
   options_text.setFillColor(sf::Color(255, 155, 55, 255));
-  options_text.setString("Resolution");
+  options_text.setString("Resolution \n\nFullscreen");
   // options_text.setString("Resolution \n\nFullscreen \n\nAntialiasing
   // \n\nVsync \n\n");
 }
@@ -117,11 +121,21 @@ void settings_state::button_handler()
         state_details->gfx_settings->resolution.height !=
             vms[drop_lists["RESOLUTION"]->get_active_elem_id()].height)
     {
+
       state_details->gfx_settings->resolution =
           vms[drop_lists["RESOLUTION"]->get_active_elem_id()];
-      window->create(state_details->gfx_settings->resolution,
-                     state_details->gfx_settings->title, sf::Style::Close,
-                     state_details->gfx_settings->cs);
+      if (check->get_active())
+      {
+        window->create(state_details->gfx_settings->resolution,
+                       state_details->gfx_settings->title, sf::Style::Fullscreen,
+                       state_details->gfx_settings->cs);
+      }
+      else
+      {
+        window->create(state_details->gfx_settings->resolution,
+                       state_details->gfx_settings->title, sf::Style::Close,
+                       state_details->gfx_settings->cs);
+      }
       window->setVerticalSyncEnabled(state_details->gfx_settings->vsync);
       window->setFramerateLimit(state_details->gfx_settings->framerate_limit);
       background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x),
@@ -141,6 +155,7 @@ void settings_state::update(const float &dt)
   update_input(dt);
   update_gui();
   button_handler();
+  check->update(mouse_pos_view);
 }
 
 void settings_state::render_gui(sf::RenderTarget &target)
@@ -151,6 +166,8 @@ void settings_state::render_gui(sf::RenderTarget &target)
 
   for (auto &i : drop_lists)
     i.second->render(target);
+
+  check->render(target);
 
   target.draw(options_text);
 }
@@ -185,4 +202,6 @@ settings_state::~settings_state()
 
   for (auto &i : drop_lists)
     delete i.second;
+
+  delete check;
 }

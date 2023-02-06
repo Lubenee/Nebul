@@ -40,6 +40,7 @@ private:
     sf::Texture background_texture;
     sf::Font font;
 
+    GUI::check_box* check;
     std::map<std::string, GUI::button *> buttons;
     std::map<std::string, GUI::drop_down_box *> drop_lists;
 
