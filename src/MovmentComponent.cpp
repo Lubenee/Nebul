@@ -11,7 +11,6 @@ movment_component::movment_component(sf::Sprite &sprite, const float max_velocit
 
 void movment_component::update(const float &dt)
 {
-    std::cout << dt << '\n';
     // Check for positive x
     if (velocity.x > 0.f)
     {
@@ -68,6 +67,21 @@ void movment_component::move(const float dir_x, const float dir_y, const float &
     // Accelerating a sprite until it reaches max velocity
     velocity.x += acceleration * dir_x;
     velocity.y += acceleration * dir_y;
+}
+
+void movment_component::reset_velocity()
+{
+    velocity *= 0.f;
+}
+
+void movment_component::reset_velocityX()
+{
+    velocity.x = 0.f;
+}
+
+void movment_component::reset_velocityY()
+{
+    velocity.y = 0.f;
 }
 
 sf::Vector2f &movment_component::get_velocity()

@@ -15,6 +15,7 @@ public:
     void set_pos(const sf::Vector2f &_pos);
 
     const sf::FloatRect get_global_bounds() const;
+    const sf::FloatRect get_next_pos(const sf::Vector2f &_vel);
 
     bool intersects(const sf::FloatRect &rect);
 
@@ -23,6 +24,8 @@ public:
 private:
     sf::RectangleShape hitbox;
     sf::Sprite &sprite;
+
+    sf::FloatRect next_pos;
 
     sf::Vector2f offset;
 };

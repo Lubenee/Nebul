@@ -21,7 +21,12 @@ public:
     const short get_type() const;
     const std::string get_as_string() const;
     const sf::Vector2f &get_pos() const;
+
+    /* Returns whether the tile can be collided with or not. */
     const bool get_collision() const;
+    const sf::FloatRect get_global_bounds() const;
+
+    const bool intersects(const sf::FloatRect &_bounds) const;
 
     friend std::ostream &operator<<(std::ostream &os, const tile &tile);
     virtual ~tile();

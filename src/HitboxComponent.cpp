@@ -10,11 +10,16 @@ hitbox_component::hitbox_component(float offset_x, float offset_y, float width, 
     hitbox.setSize(sf::Vector2f(width, height));
 
     hitbox.setFillColor(sf::Color::Transparent);
-    hitbox.setOutlineThickness(1.f);
+    hitbox.setOutlineThickness(-1.f);
     hitbox.setOutlineColor(sf::Color::Magenta);
 
     offset.x = offset_x;
     offset.y = offset_y;
+
+    next_pos.left = 0.f;
+    next_pos.top = 0.f;
+    next_pos.width = width;
+    next_pos.height = height;
 }
 
 void hitbox_component::update()
@@ -52,6 +57,13 @@ const sf::FloatRect hitbox_component::get_global_bounds() const
 const sf::Vector2f &hitbox_component::get_pos() const
 {
     return hitbox.getPosition();
+}
+
+const sf::FloatRect hitbox_component::get_next_pos(const sf::Vector2f &_vel)
+{
+    next_pos.left = hitbox.getPosition().x + _vel.x;
+    next_pos.top = hitbox.getPosition().y + _vel.y;
+    return next_pos;
 }
 
 hitbox_component::~hitbox_component() {}

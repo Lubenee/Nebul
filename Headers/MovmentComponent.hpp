@@ -1,7 +1,6 @@
 #ifndef MOVMENT_COMPONENT_H
 #define MOVMENT_COMPONENT_H
 
-
 // Movment states
 enum mov_states
 {
@@ -22,6 +21,11 @@ public:
     /* Decelerates the sprite and controls the maximum velocity. Moves the sprite.*/
     void update(const float &dt);
     void move(const float _x, const float _y, const float &dt);
+
+    /* Reset the target's velocity. */
+    void reset_velocity();
+    void reset_velocityX();
+    void reset_velocityY();
 
     const bool get_state(const short unsigned state) const;
     sf::Vector2f &get_velocity();

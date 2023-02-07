@@ -107,7 +107,7 @@ void game_state::update_view(const float &dt)
 void game_state::update_tilemap(const float &dt)
 {
     map->update();
-    map->update_collision(plr);
+    map->update_collision(plr, dt);
 }
 
 void game_state::update(const float &dt)
@@ -117,9 +117,9 @@ void game_state::update(const float &dt)
     if (!paused)
     {
         update_view(dt);
-        plr->update(dt);
         update_player_input(dt);
         update_tilemap(dt);
+        plr->update(dt);
     }
     else if (paused)
     {

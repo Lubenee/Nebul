@@ -66,6 +66,41 @@ const sf::FloatRect entity::get_global_bounds() const
     return sprite.getGlobalBounds();
 }
 
+const sf::Vector2u entity::get_gridpos(const size_t grid_sizeu) const
+{
+    if (hc)
+        return sf::Vector2u(static_cast<size_t>(hc->get_pos().x) / grid_sizeu,
+                            static_cast<size_t>(hc->get_pos().y) / grid_sizeu);
+    return sf::Vector2u(static_cast<size_t>(sprite.getPosition().x) / grid_sizeu,
+                        static_cast<size_t>(sprite.getPosition().y) / grid_sizeu);
+}
+
+const sf::FloatRect entity::get_next_pos(const float &dt) const
+{
+    if (hc && mc)
+        return hc->get_next_pos(mc->get_velocity() * dt);
+
+    return sf::FloatRect();
+}
+
+void entity::reset_velocity()
+{
+    if (mc)
+        mc->reset_velocity();
+}
+
+void entity::reset_velocityX()
+{
+    if (mc)
+        mc->reset_velocityX();
+}
+
+void entity::reset_velocityY()
+{
+    if (mc)
+        mc->reset_velocityY();
+}
+
 void entity::set_pos(const float _x, const float _y)
 {
     if (hc)

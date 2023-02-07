@@ -50,6 +50,16 @@ const bool tile::get_collision() const
     return collision;
 }
 
+const sf::FloatRect tile::get_global_bounds() const
+{
+    return shape.getGlobalBounds();
+}
+
+const bool tile::intersects(const sf::FloatRect &_bounds) const
+{
+    return shape.getGlobalBounds().intersects(_bounds);
+}
+
 std::ostream &operator<<(std::ostream &os, const tile &tile)
 {
     os << tile.shape.getTextureRect().left << ' '
