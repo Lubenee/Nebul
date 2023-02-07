@@ -18,6 +18,7 @@ public:
 
     const bool &get_quit() const;
     const bool pressable_button();
+    const bool pressable_button_short();
 
     void set_pause(bool pause_state);
 

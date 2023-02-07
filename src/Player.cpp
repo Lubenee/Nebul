@@ -7,7 +7,7 @@ player::player(float _x, float _y, sf::Texture &_tex_sheet)
 
     set_pos(_x, _y);
 
-    create_movment_component(400.f, 10.f, 3.f);
+    create_movment_component(400.f, 1500.f, 400.f);
     create_hitbox_component(86.f, 67.f, 86.f, 100.f, sprite);
     create_animation_component(_tex_sheet);
 

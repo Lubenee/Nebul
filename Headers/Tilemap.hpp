@@ -15,7 +15,7 @@ public:
     void update_collision(entity *entity, const float &dt);
 
     void update();
-    void render(sf::RenderTarget &target, const entity *entity = nullptr);
+    void render(sf::RenderTarget &target, const sf::Vector2i &grid_position);
 
     /* Takes three indicies from the mouse position in the grid and a tiles to that position if the internal tilemap array allows it .*/
     void add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool collision, const short type);
@@ -37,6 +37,7 @@ public:
     void load_tilemap(const std::string file_name);
 
     const sf::Texture *get_tilesheet() const;
+    const int get_num_of_layers(const sf::Vector2i mouse_pos_grid, const int layer) const;
 
     ~tilemap();
 
@@ -48,7 +49,7 @@ private:
     void clear_map();
 
 private:
-    std::vector<std::vector<std::vector<tile *>>> map;
+    std::vector<std::vector<std::vector<std::vector<tile *>>>> map;
     sf::Vector2i map_size_tiles;
     sf::Vector2f map_size_pixels;
 

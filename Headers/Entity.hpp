@@ -21,7 +21,7 @@ public:
 
     virtual const sf::Vector2f &get_pos() const;
     virtual const sf::FloatRect get_global_bounds() const;
-    virtual const sf::Vector2u get_gridpos(const size_t grid_sizeu) const;
+    virtual const sf::Vector2i get_gridpos(const int grid_size) const;
     virtual const sf::FloatRect get_next_pos(const float &dt) const;
 
     virtual void reset_velocity();

@@ -136,7 +136,7 @@ void game_state::render(sf::RenderTarget *target)
     render_texture.clear();
 
     render_texture.setView(view);
-    map->render(render_texture);
+    map->render(render_texture, plr->get_gridpos(static_cast<int>(state_details->grid_size)));
 
     plr->render(render_texture);
 

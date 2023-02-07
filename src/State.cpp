@@ -45,6 +45,16 @@ const bool state::pressable_button()
     return false;
 }
 
+const bool state::pressable_button_short()
+{
+    if (key_timer.getElapsedTime().asMilliseconds() > key_time_max_miliseconds - 200)
+    {
+        key_timer.restart();
+        return true;
+    }
+    return false;
+}
+
 void state::set_pause(bool pause_state)
 {
     paused = pause_state;

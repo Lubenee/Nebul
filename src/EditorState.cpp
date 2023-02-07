@@ -2,7 +2,7 @@
 #include "../Headers/EditorState.hpp"
 
 editor_state::editor_state(state_data *_state_data)
-    : state(_state_data), cam_speed(400.f)
+    : state(_state_data), cam_speed(700.f)
 {
     init_keybinds();
     init_fonts();
@@ -56,6 +56,7 @@ void editor_state::init_pause_menu()
 void editor_state::init_tilemap()
 {
     tile_collision = false;
+    tile_layers = 0;
     tile_type = tt::DEFAULT;
     map = new tilemap(state_details->grid_size, 35, 35, "../Assets/tiles/tilesheet1.png");
     texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
@@ -119,7 +120,8 @@ void editor_state::update_gui()
        << mouse_pos_grid.x << ' ' << mouse_pos_grid.y << '\n'
        << texture_rect.left << ' ' << texture_rect.top << '\n'
        << "Collision: " << tile_collision << '\n'
-       << "Type: " << tile_type;
+       << "Type: " << tile_type << '\n'
+       << "Layers: " << map->get_num_of_layers(mouse_pos_grid, tile_layers);
     mouse_text.setString(ss.str());
 }
 
@@ -153,7 +155,7 @@ void editor_state::update_input(const float &dt)
 void editor_state::update_editor_input()
 {
     // Add a new tile
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && pressable_button_short())
     {
         if (!sidebar.getGlobalBounds().contains(sf::Vector2f(mouse_pos_view)))
         {
@@ -163,7 +165,7 @@ void editor_state::update_editor_input()
                 texture_rect = tex_selector->get_texture_rect();
         }
     }
-    else if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+    else if (sf::Mouse::isButtonPressed(sf::Mouse::Right) && pressable_button_short())
     {
         if (!sidebar.getGlobalBounds().contains(sf::Vector2f(mouse_pos_view)))
             if (!tex_selector->get_active())
@@ -231,7 +233,7 @@ void editor_state::render(sf::RenderTarget *target)
         target = window;
 
     target->setView(view);
-    map->render(*target);
+    map->render(*target, mouse_pos_grid);
     target->setView(window->getDefaultView());
 
     render_buttons(*target);

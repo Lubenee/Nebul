@@ -66,13 +66,13 @@ const sf::FloatRect entity::get_global_bounds() const
     return sprite.getGlobalBounds();
 }
 
-const sf::Vector2u entity::get_gridpos(const size_t grid_sizeu) const
+const sf::Vector2i entity::get_gridpos(const int grid_size) const
 {
     if (hc)
-        return sf::Vector2u(static_cast<size_t>(hc->get_pos().x) / grid_sizeu,
-                            static_cast<size_t>(hc->get_pos().y) / grid_sizeu);
-    return sf::Vector2u(static_cast<size_t>(sprite.getPosition().x) / grid_sizeu,
-                        static_cast<size_t>(sprite.getPosition().y) / grid_sizeu);
+        return sf::Vector2i(static_cast<int>(hc->get_pos().x) / grid_size,
+                            static_cast<int>(hc->get_pos().y) / grid_size);
+    return sf::Vector2i(static_cast<int>(sprite.getPosition().x) / grid_size,
+                        static_cast<int>(sprite.getPosition().y) / grid_size);
 }
 
 const sf::FloatRect entity::get_next_pos(const float &dt) const
@@ -80,7 +80,7 @@ const sf::FloatRect entity::get_next_pos(const float &dt) const
     if (hc && mc)
         return hc->get_next_pos(mc->get_velocity() * dt);
 
-    return sf::FloatRect();
+    return sf::FloatRect(-1.f, -1.f, -1.f, -1.f);
 }
 
 void entity::reset_velocity()
