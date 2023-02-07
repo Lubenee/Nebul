@@ -20,6 +20,9 @@ public:
 
     const short get_type() const;
     const std::string get_as_string() const;
+    const sf::Vector2f &get_pos() const;
+    const bool get_collision() const;
+
     friend std::ostream &operator<<(std::ostream &os, const tile &tile);
     virtual ~tile();
 

@@ -22,14 +22,36 @@ void hitbox_component::update()
     hitbox.setPosition(sprite.getPosition().x + offset.x, sprite.getPosition().y + offset.y);
 }
 
+void hitbox_component::render(sf::RenderTarget &target)
+{
+    target.draw(hitbox);
+}
+
 bool hitbox_component::intersects(const sf::FloatRect &rect)
 {
     return hitbox.getGlobalBounds().intersects(rect);
 }
 
-void hitbox_component::render(sf::RenderTarget &target)
+void hitbox_component::set_pos(const float _x, const float _y)
 {
-    target.draw(hitbox);
+    hitbox.setPosition(_x, _y);
+    sprite.setPosition(_x - offset.x, _y - offset.y);
+}
+
+void hitbox_component::set_pos(const sf::Vector2f &_pos)
+{
+    hitbox.setPosition(_pos);
+    sprite.setPosition(_pos.x - offset.x, _pos.y - offset.y);
+}
+
+const sf::FloatRect hitbox_component::get_global_bounds() const
+{
+    return hitbox.getGlobalBounds();
+}
+
+const sf::Vector2f &hitbox_component::get_pos() const
+{
+    return hitbox.getPosition();
 }
 
 hitbox_component::~hitbox_component() {}

@@ -51,6 +51,7 @@ private:
 
     sf::RectangleShape selector;
     GUI::texture_selector *tex_selector;
+
     sf::RectangleShape sidebar;
 
     sf::View view;

@@ -59,12 +59,17 @@ void game::update()
 {
     if (!states.empty())
     {
-        states.top()->update(dt);
-        if (states.top()->get_quit())
+        /* The hasFocus functions check whether the user is currently in the application's window or doing something else.*/
+        if (window->hasFocus())
         {
-            states.top()->end_state();
-            delete states.top();
-            states.pop();
+
+            states.top()->update(dt);
+            if (states.top()->get_quit())
+            {
+                states.top()->end_state();
+                delete states.top();
+                states.pop();
+            }
         }
     }
     else

@@ -100,7 +100,14 @@ void game_state::update_player_input(const float &dt)
 
 void game_state::update_view(const float &dt)
 {
-    view.setCenter(plr->get_pos());
+    /* std::floor is used in order to fix line tearing while rendering. That way the player.pos values are a bit more precise. */
+    view.setCenter(std::floor(plr->get_pos().x), std::floor(plr->get_pos().y));
+}
+
+void game_state::update_tilemap(const float &dt)
+{
+    map->update();
+    map->update_collision(plr);
 }
 
 void game_state::update(const float &dt)
@@ -112,6 +119,7 @@ void game_state::update(const float &dt)
         update_view(dt);
         plr->update(dt);
         update_player_input(dt);
+        update_tilemap(dt);
     }
     else if (paused)
     {

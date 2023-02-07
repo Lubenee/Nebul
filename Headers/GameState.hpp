@@ -31,6 +31,7 @@ private:
     void update_input(const float &dt);
     void update_player_input(const float &dt);
     void update_menu_buttons();
+    void update_tilemap(const float &dt);
 
 private:
     sf::View view;

@@ -40,6 +40,16 @@ const std::string tile::get_as_string() const
     return ss.str();
 }
 
+const sf::Vector2f &tile::get_pos() const
+{
+    return shape.getPosition();
+}
+
+const bool tile::get_collision() const
+{
+    return collision;
+}
+
 std::ostream &operator<<(std::ostream &os, const tile &tile)
 {
     os << tile.shape.getTextureRect().left << ' '

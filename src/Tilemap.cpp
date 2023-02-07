@@ -6,23 +6,30 @@ tilemap::tilemap(float _grid_size, unsigned width, unsigned height, const std::s
     init_textures();
     this->texture_file = texture_file;
 
-    map_size.x = width;
-    map_size.y = height;
+    map_size_tiles.x = width;
+    map_size_tiles.y = height;
+    map_size_pixels.x = static_cast<float>(width) * _grid_size;
+    map_size_pixels.y = static_cast<float>(height) * _grid_size;
     layers = 1;
 
     grid_sizef = _grid_size;
     grid_sizeu = static_cast<unsigned>(grid_sizef);
 
-    // Allocate enough empty slots for the vector.
-    map.reserve(map_size.x);
+    collision_box.setSize(sf::Vector2f(_grid_size, _grid_size));
+    collision_box.setFillColor(sf::Color(255, 0, 0, 80));
+    collision_box.setOutlineColor(sf::Color::Red);
+    collision_box.setOutlineThickness(-1.f);
 
-    for (size_t x = 0; x < map_size.x; ++x)
+    // Allocate enough empty slots for the map vector.
+    map.reserve(map_size_tiles.x);
+
+    for (size_t x = 0; x < map_size_tiles.x; ++x)
     {
         map.push_back(std::vector<std::vector<tile *>>());
-        for (size_t y = 0; y < map_size.y; ++y)
+        for (size_t y = 0; y < map_size_tiles.y; ++y)
         {
-            // Allocate enough empty slots for the vector.
-            map[x].reserve(map_size.y);
+            // Allocate enough empty slots for the map vector.
+            map[x].reserve(map_size_tiles.y);
             map[x].push_back(std::vector<tile *>());
             for (size_t z = 0; z < layers; ++z)
             {
@@ -39,21 +46,44 @@ void tilemap::init_textures()
         throw("ERROR::TILEMAP::FAILED TO LOAD FILE: " + texture_file + '\n');
 }
 
-void tilemap::update() {}
+void tilemap::update_collision(entity *entity)
+{
 
-void tilemap::render(sf::RenderTarget &target)
+    if (entity->get_pos().x < 0.f)
+        entity->set_pos(0.f, entity->get_pos().y);
+    else if (entity->get_pos().x + entity->get_global_bounds().width > map_size_pixels.x)
+        entity->set_pos(map_size_pixels.x - entity->get_global_bounds().width, entity->get_pos().y);
+
+    if (entity->get_pos().y < 0.f)
+        entity->set_pos(entity->get_pos().x, 0.f);
+    else if (entity->get_pos().y + entity->get_global_bounds().height > map_size_pixels.y)
+        entity->set_pos(entity->get_pos().x, map_size_pixels.y - entity->get_global_bounds().height);
+}
+
+void tilemap::update()
+{
+}
+
+void tilemap::render(sf::RenderTarget &target, const entity *entity)
 {
     for (auto &x : map)
         for (auto &y : x)
             for (auto &tile : y)
                 if (tile != nullptr)
+                {
                     tile->render(target);
+                    if (tile->get_collision())
+                    {
+                        target.draw(collision_box);
+                        collision_box.setPosition(tile->get_pos()); // TODO remove later.
+                    }
+                }
 }
 
 void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool &collision, const short &type)
 {
-    if (!(x < map_size.x && x >= 0 &&
-          y < map_size.y && y >= 0 &&
+    if (!(x < map_size_tiles.x && x >= 0 &&
+          y < map_size_tiles.y && y >= 0 &&
           layer <= layers && layer >= 0))
         return; // Invalid bounds
 
@@ -66,8 +96,8 @@ void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer,
 
 void tilemap::remove_tile(const unsigned x, const unsigned y, const unsigned layer, const short &type)
 {
-    if (!(x < map_size.x && x >= 0 &&
-          y < map_size.y && y >= 0 &&
+    if (!(x < map_size_tiles.x && x >= 0 &&
+          y < map_size_tiles.y && y >= 0 &&
           layer <= layers && layer >= 0))
         return; // Invalid bounds
     if (map[x][y][layer] != nullptr && map[x][y][layer]->get_type() == type)
@@ -85,13 +115,13 @@ void tilemap::save_tilemap(const std::string save_file)
     if (!ofs.is_open())
         throw("ERROR::TILEMAP::COULDN'T SAVE TILEMAP TO FILE.\n");
 
-    ofs << map_size.x << ' ' << map_size.y << '\n'
+    ofs << map_size_tiles.x << ' ' << map_size_tiles.y << '\n'
         << grid_sizeu << '\n'
         << layers << '\n'
         << this->texture_file << '\n';
 
-    for (size_t x = 0; x < map_size.x; ++x)
-        for (size_t y = 0; y < map_size.y; ++y)
+    for (size_t x = 0; x < map_size_tiles.x; ++x)
+        for (size_t y = 0; y < map_size_tiles.y; ++y)
             for (size_t z = 0; z < layers; ++z)
                 if (map[x][y][z] != nullptr)
                     ofs << x << " " << y << " " << z << " " << map[x][y][z]->get_as_string() << " ";
@@ -121,22 +151,22 @@ void tilemap::load_tilemap(const std::string save_file)
 
     this->grid_sizef = static_cast<float>(grid_size);
     this->grid_sizeu = grid_size;
-    this->map_size.x = size.x;
-    this->map_size.y = size.y;
+    this->map_size_tiles.x = size.x;
+    this->map_size_tiles.y = size.y;
     this->layers = layers;
     this->texture_file = texture;
     if (!tile_sheet.loadFromFile(this->texture_file))
         throw("ERROR::TILEMAP::FAILED TO LOAD FILE: " + texture_file + '\n');
 
     clear_map(); // Clear the old map
-    map.reserve(this->map_size.x);
-    for (size_t x = 0; x < this->map_size.x; ++x)
+    map.reserve(this->map_size_tiles.x);
+    for (size_t x = 0; x < this->map_size_tiles.x; ++x)
     {
         map.push_back(std::vector<std::vector<tile *>>());
-        for (size_t y = 0; y < this->map_size.y; ++y)
+        for (size_t y = 0; y < this->map_size_tiles.y; ++y)
         {
             // Allocate enough empty slots for the vector.
-            map[x].reserve(this->map_size.y);
+            map[x].reserve(this->map_size_tiles.y);
             map[x].push_back(std::vector<tile *>());
             for (size_t z = 0; z < this->layers; ++z)
             {
@@ -157,10 +187,10 @@ void tilemap::load_tilemap(const std::string save_file)
 
 void tilemap::clear_map()
 {
-    for (size_t x = 0; x < map_size.x; ++x)
+    for (size_t x = 0; x < map_size_tiles.x; ++x)
     {
 
-        for (size_t y = 0; y < map_size.y; ++y)
+        for (size_t y = 0; y < map_size_tiles.y; ++y)
         {
 
             for (size_t z = 0; z < layers; ++z)

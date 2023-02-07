@@ -34,6 +34,8 @@ void entity::move(const float _x, const float _y, const float &dt)
 {
     if (mc)
         mc->move(_x, _y, dt);
+    else
+        sprite.move(_x, _y);
 }
 
 void entity::update(const float &dt)
@@ -51,12 +53,25 @@ void entity::render(sf::RenderTarget &target)
 
 const sf::Vector2f &entity::get_pos() const
 {
+    if (hc)
+        return hc->get_pos();
+
     return sprite.getPosition();
+}
+
+const sf::FloatRect entity::get_global_bounds() const
+{
+    if (hc)
+        return hc->get_global_bounds();
+    return sprite.getGlobalBounds();
 }
 
 void entity::set_pos(const float _x, const float _y)
 {
-    sprite.setPosition(_x, _y);
+    if (hc)
+        hc->set_pos(_x, _y);
+    else
+        sprite.setPosition(_x, _y);
 }
 
 entity::~entity()

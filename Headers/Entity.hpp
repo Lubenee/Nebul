@@ -13,13 +13,14 @@ public:
     void create_animation_component(sf::Texture &texture_sheet);
     void create_hitbox_component(float offset_x, float offset_y, float width, float height, sf::Sprite &_sprite);
 
-    virtual void update(const float &dt);
+    virtual void update(const float &dt) = 0;
     virtual void render(sf::RenderTarget &target);
 
     virtual void set_pos(const float _x, const float _y);
     virtual void move(const float _x, const float _y, const float &dt);
 
     virtual const sf::Vector2f &get_pos() const;
+    virtual const sf::FloatRect get_global_bounds() const;
 
     virtual ~entity();
 

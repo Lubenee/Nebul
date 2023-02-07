@@ -1,14 +1,21 @@
 #ifndef TILEMAP_H
 #define TILEMAP_H
 #include "Tile.hpp"
+#include "Entity.hpp"
+
+class entity;
+class tile;
 
 class tilemap
 {
 public:
     tilemap(float _grid_size, unsigned width, unsigned height, const std::string texture_file);
 
+    /* Updates world border collision & tile collison with any given entity. */
+    void update_collision(entity *entity);
+
     void update();
-    void render(sf::RenderTarget &target);
+    void render(sf::RenderTarget &target, const entity *entity = nullptr);
 
     /* Takes three indicies from the mouse position in the grid and a tiles to that position if the internal tilemap array allows it .*/
     void add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool &collision, const short &type);
@@ -30,16 +37,18 @@ public:
     void load_tilemap(const std::string file_name);
 
     const sf::Texture *get_tilesheet() const;
-    void clear_map();
 
     ~tilemap();
 
 private:
     void init_textures();
 
+    void clear_map();
+
 private:
     std::vector<std::vector<std::vector<tile *>>> map;
-    sf::Vector2u map_size;
+    sf::Vector2u map_size_tiles;
+    sf::Vector2f map_size_pixels;
 
     sf::Texture tile_sheet;
     std::string texture_file;
@@ -47,6 +56,7 @@ private:
     unsigned layers;
     unsigned grid_sizeu;
     float grid_sizef;
+    sf::RectangleShape collision_box;
 };
 
 #endif

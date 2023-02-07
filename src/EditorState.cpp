@@ -141,13 +141,13 @@ void editor_state::update_input(const float &dt)
         tex_selector->get_hidden() == true ? tex_selector->set_hidden(false) : tex_selector->set_hidden(true);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_RIGHT"])))
-        view.move(cam_speed * dt, 0.f);
+        view.move(std::floor(cam_speed * dt), 0.f);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_LEFT"])))
-        view.move(-cam_speed * dt, 0.f);
+        view.move(-std::floor(cam_speed * dt), 0.f);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_UP"])))
-        view.move(0, -cam_speed * dt);
+        view.move(0, -std::floor(cam_speed * dt));
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_DOWN"])))
-        view.move(0, cam_speed * dt);
+        view.move(0, std::floor(cam_speed * dt));
 }
 
 void editor_state::update_editor_input()
