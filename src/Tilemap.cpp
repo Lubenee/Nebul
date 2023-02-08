@@ -175,6 +175,15 @@ void tilemap::update()
 {
 }
 
+void tilemap::render_deferred(sf::RenderTarget &target)
+{
+    while (!deferred_render_stack.empty())
+    {
+        deferred_render_stack.top()->render(target);
+        deferred_render_stack.pop();
+    }
+}
+
 void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position)
 {
     from_x = grid_position.x - 9;
@@ -198,7 +207,15 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
             for (size_t k = 0; k < map[x][y][layer].size(); ++k)
                 if (map[x][y][layer][k] != nullptr)
                 {
-                    map[x][y][layer][k]->render(target);
+                    if (map[x][y][layer][k]->get_type() == tt::ABOVE_PLAYER)
+                    {
+                        std::cout << "nigga\n";
+                        deferred_render_stack.push(map[x][y][layer][k]);
+                    }
+                    else
+                    {
+                        map[x][y][layer][k]->render(target);
+                    }
                     if (map[x][y][layer][k]->get_collision())
                     {
                         collision_box.setPosition(map[x][y][layer][k]->get_pos()); // TODO remove later.

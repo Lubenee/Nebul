@@ -16,6 +16,7 @@ public:
 
     void update();
     void render(sf::RenderTarget &target, const sf::Vector2i &grid_position);
+    void render_deferred(sf::RenderTarget &target);
 
     /* Takes three indicies from the mouse position in the grid and a tiles to that position if the internal tilemap array allows it .*/
     void add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool collision, const short type);
@@ -55,6 +56,7 @@ private:
 
     sf::Texture tile_sheet;
     std::string texture_file;
+    std::stack<tile *> deferred_render_stack;
 
     unsigned layers;
     unsigned grid_sizeu;

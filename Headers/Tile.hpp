@@ -5,7 +5,9 @@
 enum tt
 {
     DEFAULT = 0,
-    DAMAGING
+    DAMAGING,
+    ABOVE_PLAYER
+
 };
 
 class tile
