@@ -3,6 +3,7 @@
 #include "MovmentComponent.hpp"
 #include "AnimationComponent.hpp"
 #include "HitboxComponent.hpp"
+#include "AttributeComponent.hpp"
 
 class entity
 {
@@ -12,6 +13,7 @@ public:
     void create_movment_component(const float max_velocity, const float _acceleration, const float _deceleration);
     void create_animation_component(sf::Texture &texture_sheet);
     void create_hitbox_component(float offset_x, float offset_y, float width, float height, sf::Sprite &_sprite);
+    void create_attribute_component(const int _level);
 
     virtual void update(const float &dt) = 0;
     virtual void render(sf::RenderTarget &target);
@@ -42,6 +44,9 @@ protected:
 
     // Hitbox component
     hitbox_component *hc;
+
+    // Attribute component
+    attribute_component *at_c;
 
 private:
 };

@@ -58,9 +58,9 @@ void editor_state::init_tilemap()
     tile_collision = false;
     tile_layers = 0;
     tile_type = tt::DEFAULT;
-    map_size.x = 35;
-    map_size.y = 35;
-    map = new tilemap(state_details->grid_size, 350, 350, "../Assets/tiles/tilesheet1.png");
+    map_size.x = 15;
+    map_size.y = 15;
+    map = new tilemap(state_details->grid_size, 150, 150, "../Assets/tiles/tilesheet1.png");
     texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
     map->load_tilemap("savefile.sav");
 }

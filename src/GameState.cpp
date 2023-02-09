@@ -42,7 +42,7 @@ void game_state::init_pause_menu()
 
 void game_state::init_map()
 {
-    map = new tilemap(state_details->grid_size, 350, 350, "../Assets/tiles/tilesheet1.png");
+    map = new tilemap(state_details->grid_size, 150, 150, "../Assets/tiles/tilesheet1.png");
     map->load_tilemap("savefile.sav");
 }
 

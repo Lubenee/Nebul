@@ -6,6 +6,7 @@ entity::entity()
     mc = nullptr;
     ac = nullptr;
     hc = nullptr;
+    at_c = nullptr;
     texture = nullptr;
 }
 
@@ -28,6 +29,11 @@ void entity::create_animation_component(sf::Texture &texture_sheet)
 void entity::create_hitbox_component(float offset_x, float offset_y, float width, float height, sf::Sprite &_sprite)
 {
     hc = new hitbox_component(offset_x, offset_y, width, height, _sprite);
+}
+
+void entity::create_attribute_component(const int _level)
+{
+    at_c = new attribute_component(_level);
 }
 
 void entity::move(const float _x, const float _y, const float &dt)
@@ -114,4 +120,5 @@ entity::~entity()
     delete mc;
     delete ac;
     delete hc;
+    delete at_c;
 }

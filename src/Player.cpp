@@ -10,6 +10,7 @@ player::player(float _x, float _y, sf::Texture &_tex_sheet)
     create_movment_component(400.f, 1500.f, 400.f);
     create_hitbox_component(86.f, 67.f, 86.f, 100.f, sprite);
     create_animation_component(_tex_sheet);
+    create_attribute_component(1);
 
     ac->add_animation("IDLE", 8.f, 0, 0, 13, 0, 192, 192);
     ac->add_animation("WALK", 3.f, 0, 1, 11, 1, 192, 192);
@@ -93,6 +94,9 @@ void player::update_attack()
 
 void player::update(const float &dt)
 {
+    // TODO Debug print
+    at_c->print();
+
     mc->update(dt);
     hc->update();
     update_attack();
