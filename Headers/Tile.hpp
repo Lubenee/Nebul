@@ -27,6 +27,7 @@ public:
     /* Returns whether the tile can be collided with or not. */
     const bool get_collision() const;
     const sf::FloatRect get_global_bounds() const;
+    const sf::IntRect get_texture_rect() const;
 
     const bool intersects(const sf::FloatRect &_bounds) const;
 
@@ -35,6 +36,7 @@ public:
 
 protected:
     sf::RectangleShape shape;
+    sf::IntRect texture_rect;
     bool collision;
     short type;
 

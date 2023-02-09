@@ -58,7 +58,9 @@ void editor_state::init_tilemap()
     tile_collision = false;
     tile_layers = 0;
     tile_type = tt::DEFAULT;
-    map = new tilemap(state_details->grid_size, 35, 35, "../Assets/tiles/tilesheet1.png");
+    map_size.x = 35;
+    map_size.y = 35;
+    map = new tilemap(state_details->grid_size, 350, 350, "../Assets/tiles/tilesheet1.png");
     texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
     map->load_tilemap("savefile.sav");
 }
@@ -108,20 +110,31 @@ void editor_state::update_gui()
 
     tex_selector->update(mouse_pos_window);
     if (!tex_selector->get_active())
+    // for snappy selection
     {
-        // for snappy selection
         selector.setPosition(mouse_pos_grid.x * state_details->grid_size, mouse_pos_grid.y * state_details->grid_size);
         selector.setTextureRect(texture_rect);
     }
 
     mouse_text.setPosition(mouse_pos_view.x - mouse_text_offset, mouse_pos_view.y);
     std::stringstream ss;
-    ss << mouse_pos_view.x << ' ' << mouse_pos_view.y << '\n'
-       << mouse_pos_grid.x << ' ' << mouse_pos_grid.y << '\n'
-       << texture_rect.left << ' ' << texture_rect.top << '\n'
-       << "Collision: " << tile_collision << '\n'
-       << "Type: " << tile_type << '\n'
-       << "Layers: " << map->get_num_of_layers(mouse_pos_grid, tile_layers);
+
+    /* This check prevents a crash where the layers/collision return undefined when the mouse goes out of the world borders. */
+    if (mouse_pos_grid.x >= 0 && mouse_pos_grid.x < map_size.x &&
+        mouse_pos_grid.y >= 0 && mouse_pos_grid.y < map_size.y)
+    {
+        ss << mouse_pos_view.x << ' ' << mouse_pos_view.y << '\n'
+           << mouse_pos_grid.x << ' ' << mouse_pos_grid.y << '\n'
+           << texture_rect.left << ' ' << texture_rect.top << '\n'
+           << "Collision: " << tile_collision << '\n'
+           << "Type: " << tile_type << '\n'
+           << "Layers: " << map->get_num_of_layers(mouse_pos_grid, tile_layers);
+    }
+    else
+    {
+        ss << mouse_pos_view.x << ' ' << mouse_pos_view.y << '\n'
+           << mouse_pos_grid.x << ' ' << mouse_pos_grid.y << '\n';
+    }
     mouse_text.setString(ss.str());
 }
 
@@ -143,19 +156,19 @@ void editor_state::update_input(const float &dt)
         tex_selector->get_hidden() == true ? tex_selector->set_hidden(false) : tex_selector->set_hidden(true);
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_RIGHT"])))
-        view.move(std::floor(cam_speed * dt), 0.f);
+        view.move((cam_speed * dt), 0.f);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_LEFT"])))
-        view.move(-std::floor(cam_speed * dt), 0.f);
+        view.move(-(cam_speed * dt), 0.f);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_UP"])))
-        view.move(0, -std::floor(cam_speed * dt));
+        view.move(0, -(cam_speed * dt));
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_CAM_DOWN"])))
-        view.move(0, std::floor(cam_speed * dt));
+        view.move(0, (cam_speed * dt));
 }
 
 void editor_state::update_editor_input()
 {
     // Add a new tile
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && pressable_button_short())
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         if (!sidebar.getGlobalBounds().contains(sf::Vector2f(mouse_pos_view)))
         {
@@ -229,12 +242,14 @@ void editor_state::render_gui(sf::RenderTarget &target)
 
 void editor_state::render(sf::RenderTarget *target)
 {
+
     if (!target)
         target = window;
 
     target->setView(view);
     map->render(*target, mouse_pos_grid);
     target->setView(window->getDefaultView());
+    // map->render_deferred(*target);
 
     render_buttons(*target);
     render_gui(*target);

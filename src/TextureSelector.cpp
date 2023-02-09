@@ -49,11 +49,16 @@ void texture_selector::update(const sf::Vector2i &mouse_pos_window)
     if (hide_button->pressed() && pt.pressable_button())
         hidden = (hidden == true ? false : true);
 
-    if (!hidden)
+    if (hidden)
     {
+        active = false;
+        return;
+    }
+    else
+    {
+
         if (bounds.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_pos_window)))
             active = true;
-
         else
             active = false;
 

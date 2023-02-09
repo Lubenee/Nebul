@@ -22,17 +22,13 @@ tilemap::tilemap(float _grid_size, int width, int height, const std::string text
 
     // Allocate enough empty slots for the map vector.
     map.resize(map_size_tiles.x, std::vector<std::vector<std::vector<tile *>>>());
-
     for (size_t x = 0; x < map_size_tiles.x; ++x)
     {
         for (size_t y = 0; y < map_size_tiles.y; ++y)
         {
             map[x].resize(map_size_tiles.y, std::vector<std::vector<tile *>>());
-
             for (size_t z = 0; z < layers; ++z)
-            {
                 map[x][y].resize(layers, std::vector<tile *>());
-            }
         }
     }
 
@@ -75,7 +71,6 @@ void tilemap::update_collision(entity *entity, const float &dt)
     if (to_y > map_size_tiles.y)
         to_y = map_size_tiles.y;
 
-    // Todo: Refactor code ? :D
     for (int x = from_x; x < to_x; ++x)
     {
         for (int y = from_y; y < to_y; ++y)
@@ -209,7 +204,6 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
                 {
                     if (map[x][y][layer][k]->get_type() == tt::ABOVE_PLAYER)
                     {
-                        std::cout << "nigga\n";
                         deferred_render_stack.push(map[x][y][layer][k]);
                     }
                     else
@@ -222,6 +216,7 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
                         target.draw(collision_box);
                     }
                 }
+    render_deferred(target);
 }
 
 void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool collision, const short type)
@@ -232,6 +227,11 @@ void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer,
         return;
     if (map[x][y][layer].size() >= 5) // TODO : LIMIT FOR LAYERS PER TILE
         return;
+
+    // No need to layer the same texture over and over
+    if (map[x][y][layer].size() > 0)
+        if (map[x][y][layer][map[x][y][layer].size() - 1]->get_texture_rect() == _rect)
+            return;
 
     map[x][y][layer].push_back(new tile(x, y, grid_sizef, tile_sheet, _rect, collision, type));
 }
@@ -359,12 +359,9 @@ const sf::Texture *tilemap::get_tilesheet() const
 
 const int tilemap::get_num_of_layers(const sf::Vector2i mouse_pos_grid, const int layer) const
 {
-    if (!(mouse_pos_grid.x >= 0 && mouse_pos_grid.x < map_size_tiles.x))
-        return -1;
-    if (!(mouse_pos_grid.y >= 0 && mouse_pos_grid.y < map_size_tiles.y))
-        return -1;
     if (layer >= 0 && layer < map[mouse_pos_grid.x][mouse_pos_grid.y].size())
         return map[mouse_pos_grid.x][mouse_pos_grid.y][layer].size();
+    return -1;
 }
 
 tilemap::~tilemap()

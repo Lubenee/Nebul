@@ -45,6 +45,7 @@ private:
     bool tile_collision;
     short tile_type;
     int tile_layers;
+    sf::Vector2i map_size;
 
     GUI::max_press_time pt;
     std::map<std::string, GUI::button *> buttons;

@@ -17,6 +17,7 @@ tile::tile(size_t x, size_t y, float grid_size,
     shape.setTextureRect(_rect);
     this->collision = collision;
     this->type = type;
+    this->texture_rect = _rect;
 }
 
 void tile::update() {}
@@ -58,6 +59,11 @@ const sf::FloatRect tile::get_global_bounds() const
 const bool tile::intersects(const sf::FloatRect &_bounds) const
 {
     return shape.getGlobalBounds().intersects(_bounds);
+}
+
+const sf::IntRect tile::get_texture_rect() const
+{
+    return this->texture_rect;
 }
 
 std::ostream &operator<<(std::ostream &os, const tile &tile)
