@@ -38,4 +38,5 @@ public:
     void print() const;
     void gain_exp(const int _exp);
 };
+
 #endif

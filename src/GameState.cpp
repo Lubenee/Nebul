@@ -7,10 +7,16 @@ game_state::game_state(state_data *_state_data)
     init_keybinds();
     init_assets();
     init_player();
+    init_player_gui();
     init_pause_menu();
     init_map();
     init_view();
     init_render_canvas();
+}
+
+void game_state::init_player_gui()
+{
+    plr_gui = new player_gui(plr);
 }
 
 void game_state::init_render_canvas()
@@ -96,6 +102,15 @@ void game_state::update_player_input(const float &dt)
         plr->move(0.f, -1.f, dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_DOWN"])))
         plr->move(0.f, 1.f, dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && pressable_button())
+        plr->lose_hp(1);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I) && pressable_button())
+        plr->gain_hp(1);
+}
+
+void game_state::update_player_gui(const float &dt)
+{
+    plr_gui->update(dt);
 }
 
 void game_state::update_view(const float &dt)
@@ -120,6 +135,7 @@ void game_state::update(const float &dt)
         update_player_input(dt);
         update_tilemap(dt);
         plr->update(dt);
+        update_player_gui(dt);
     }
     else if (paused)
     {
@@ -127,24 +143,24 @@ void game_state::update(const float &dt)
         update_menu_buttons();
     }
 }
-
 void game_state::render(sf::RenderTarget *target)
 {
     if (!target)
         target = window;
-
     render_texture.clear();
 
     render_texture.setView(view);
+
     map->render(render_texture, plr->get_gridpos(static_cast<int>(state_details->grid_size)));
     plr->render(render_texture);
+
     map->render_deferred(render_texture);
 
+    render_texture.setView(render_texture.getDefaultView());
+    plr_gui->render(render_texture);
+
     if (paused)
-    {
-        render_texture.setView(render_texture.getDefaultView());
         p_menu->render(render_texture);
-    }
 
     // Final render
     render_texture.display();
@@ -156,4 +172,5 @@ game_state::~game_state()
     delete map;
     delete p_menu;
     delete plr;
+    delete plr_gui;
 }

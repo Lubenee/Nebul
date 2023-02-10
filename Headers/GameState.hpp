@@ -3,6 +3,7 @@
 #include "State.hpp"
 #include "PauseMenu.hpp"
 #include "Tilemap.hpp"
+#include "PlayerGUI.hpp"
 
 class state;
 class pause_menu;
@@ -22,6 +23,7 @@ private:
     void init_keybinds();
     void init_assets();
     void init_player();
+    void init_player_gui();
     void init_map();
     void init_pause_menu();
     void init_view();
@@ -30,6 +32,7 @@ private:
     void update_view(const float &dt);
     void update_input(const float &dt);
     void update_player_input(const float &dt);
+    void update_player_gui(const float &dt);
     void update_menu_buttons();
     void update_tilemap(const float &dt);
 
@@ -43,6 +46,7 @@ private:
 
     tilemap *map;
     player *plr;
+    player_gui *plr_gui;
 
     sf::Font p_menu_font;
     pause_menu *p_menu;

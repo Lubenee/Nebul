@@ -103,6 +103,35 @@ void player::update(const float &dt)
     update_animation(dt);
 }
 
+void player::lose_hp(const int hp)
+{
+    at_c->hp -= hp;
+    if (at_c->hp < 0)
+        at_c->hp = 0;
+}
+void player::lose_exp(const unsigned exp)
+{
+    at_c->exp -= exp;
+    if (at_c->exp < 0)
+        at_c->exp = 0;
+}
+
+void player::gain_hp(const int hp)
+{
+    at_c->hp += hp;
+    if (at_c->hp > at_c->hp_max)
+        at_c->hp = at_c->hp_max;
+}
+void player::gain_exp(const unsigned exp)
+{
+    at_c->gain_exp(exp);
+}
+
+attribute_component *player::get_attribute_component()
+{
+    return this->at_c;
+}
+
 player::~player()
 {
 }

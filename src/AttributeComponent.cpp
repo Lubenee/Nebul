@@ -5,7 +5,7 @@ attribute_component::attribute_component(int _level)
 {
     level = _level;
     exp = 0;
-    exp_next = static_cast<size_t>((50 / 3) * pow(level, 3) - 6 * pow(level, 2) + (level * 17) - 12);
+    exp_next = static_cast<size_t>((50 / 3) * pow(level + 1, 3) - 6 * pow(level + 1, 2) + ((level + 1) * 17) - 12);
     attribute_points = 3;
 
     vitality = 1;
