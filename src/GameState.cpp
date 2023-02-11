@@ -106,6 +106,8 @@ void game_state::update_player_input(const float &dt)
         plr->lose_hp(1);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::I) && pressable_button())
         plr->gain_hp(1);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+        plr->gain_exp(10);
 }
 
 void game_state::update_player_gui(const float &dt)

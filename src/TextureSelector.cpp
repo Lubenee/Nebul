@@ -11,7 +11,7 @@ texture_selector::texture_selector(const float _x, const float _y,
     this->grid_size = grid_size;
     active = false;
     hidden = true;
-    float offset = 100.f;
+    float offset = grid_size;
 
     bounds.setSize(sf::Vector2f(_width, _height));
     bounds.setPosition(_x + offset, _y);
