@@ -27,20 +27,20 @@ void settings_state::init_text()
 
 void settings_state::init_gui()
 {
-  float x = state_details->window->getSize().x / 2.f;
-  float y = (5 * state_details->window->getSize().y) / 6.f;
-
   buttons["APPLY"] = new GUI::button(
-      x, y, 200.f, 45.f, "Apply", &font, 30, sf::Color(150, 150, 150, 200),
-      sf::Color(250, 250, 250, 250), sf::Color(40, 40, 40, 80),
-      sf::Color(70, 70, 70, 80), sf::Color(150, 150, 150, 80),
-      sf::Color(20, 20, 20, 80));
+      p2p_x(65.f), p2p_y(80.f),
+      p2p_x(10.f), p2p_y(6.4f),
+      "Apply", &font, 30,
+      sf::Color(150, 150, 150, 200), sf::Color(250, 250, 250, 250), sf::Color(40, 40, 40, 80),
+      sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
   buttons["BACK"] = new GUI::button(
-      x + buttons["APPLY"]->get_bounds().width, y, 200.f, 45.f, "Back", &font,
+      p2p_x(80.f), p2p_y(80.f),
+      p2p_x(10.f), p2p_y(6.4f),
+      "Back", &font,
       30, sf::Color(150, 150, 150, 200), sf::Color(250, 250, 250, 250),
-      sf::Color(40, 40, 40, 80), sf::Color(70, 70, 70, 80),
-      sf::Color(150, 150, 150, 80), sf::Color(20, 20, 20, 80));
+      sf::Color(40, 40, 40, 80), sf::Color(70, 70, 70, 0),
+      sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
   std::vector<std::string> list;
   vms = sf::VideoMode::getFullscreenModes();
@@ -140,11 +140,8 @@ void settings_state::button_handler()
       window->setFramerateLimit(state_details->gfx_settings->framerate_limit);
       background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x),
                                       static_cast<float>(window->getSize().y)));
-      float x = state_details->window->getSize().x / 2.f;
-      float y = (5 * state_details->window->getSize().y) / 6.f;
-
-      buttons["APPLY"]->set_pos(x, y);
-      buttons["BACK"]->set_pos(x + buttons["APPLY"]->get_bounds().width, y);
+      buttons["APPLY"]->set_pos(p2p_x(65.f), p2p_y(80.f));
+      buttons["BACK"]->set_pos(p2p_x(80.f), p2p_y(80.f));
     }
   }
 }

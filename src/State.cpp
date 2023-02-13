@@ -65,6 +65,16 @@ void state::end_state()
     quit = true;
 }
 
+const float state::p2p_x(const float _percent)
+{
+    return std::floor(static_cast<float>(state_details->gfx_settings->resolution.width) * (_percent / 100.f));
+}
+
+const float state::p2p_y(const float _percent)
+{
+    return std::floor(static_cast<float>(state_details->gfx_settings->resolution.height) * (_percent / 100.f));
+}
+
 state::~state()
 {
 }

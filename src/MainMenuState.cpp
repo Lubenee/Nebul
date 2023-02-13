@@ -42,41 +42,45 @@ void main_menu_state::init_background()
 
 void main_menu_state::init_buttons()
 {
-    buttons["GAME_STATE"] = new GUI::button(320.f, 140.f, 197.f, 40.f,
+    buttons["GAME_STATE"] = new GUI::button(p2p_x(40.f), p2p_y(25.f),
+                                            p2p_x(15.f), p2p_y(6.4f),
                                             "New Game", &font, 30,
                                             sf::Color(150, 150, 150, 200),
                                             sf::Color(250, 250, 250, 250),
                                             sf::Color(40, 40, 40, 80),
-                                            sf::Color(70, 70, 70, 0),
+                                            sf::Color(70, 70, 70, 00),
                                             sf::Color(150, 150, 150, 0),
-                                            sf::Color(20, 20, 20, 0));
+                                            sf::Color(20, 20, 20, 00));
 
-    buttons["EDITOR_STATE"] = new GUI::button(320.f, 225.f, 200.f, 45.f,
+    buttons["EDITOR_STATE"] = new GUI::button(p2p_x(40.f), p2p_y(37.f),
+                                              p2p_x(15.f), p2p_y(6.4f),
                                               "Editor", &font, 30,
                                               sf::Color(150, 150, 150, 200),
                                               sf::Color(250, 250, 250, 250),
                                               sf::Color(40, 40, 40, 80),
-                                              sf::Color(70, 70, 70, 0),
-                                              sf::Color(150, 150, 150, 0),
-                                              sf::Color(20, 20, 20, 0));
+                                              sf::Color(70, 70, 70, 00),
+                                              sf::Color(150, 150, 150, 00),
+                                              sf::Color(20, 20, 20, 00));
 
-    buttons["SETTINGS_STATE"] = new GUI::button(320.f, 300.f, 200.f, 45.f,
+    buttons["SETTINGS_STATE"] = new GUI::button(p2p_x(40.f), p2p_y(49.f),
+                                                p2p_x(15.f), p2p_y(6.4f),
                                                 "Settings", &font, 30,
                                                 sf::Color(150, 150, 150, 200),
                                                 sf::Color(250, 250, 250, 250),
                                                 sf::Color(40, 40, 40, 80),
-                                                sf::Color(70, 70, 70, 0),
-                                                sf::Color(150, 150, 150, 0),
-                                                sf::Color(20, 20, 20, 0));
+                                                sf::Color(70, 70, 70, 00),
+                                                sf::Color(150, 150, 150, 00),
+                                                sf::Color(20, 20, 20, 00));
 
-    buttons["EXIT_STATE"] = new GUI::button(320.f, 420.f, 200.f, 45.f,
+    buttons["EXIT_STATE"] = new GUI::button(p2p_x(40.f), p2p_y(63.f),
+                                            p2p_x(15.f), p2p_y(6.4f),
                                             "Quit", &font, 30,
                                             sf::Color(150, 150, 150, 200),
                                             sf::Color(250, 250, 250, 250),
                                             sf::Color(40, 40, 40, 80),
-                                            sf::Color(70, 70, 70, 0),
-                                            sf::Color(150, 150, 150, 0),
-                                            sf::Color(20, 20, 20, 0));
+                                            sf::Color(70, 70, 70, 00),
+                                            sf::Color(150, 150, 150, 00),
+                                            sf::Color(20, 20, 20, 00));
 }
 
 void main_menu_state::update_buttons()
