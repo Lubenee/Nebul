@@ -216,7 +216,7 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
                         target.draw(collision_box);
                     }
                 }
-    render_deferred(target);
+    // render_deferred(target);
 }
 
 void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool collision, const short type)

@@ -149,6 +149,7 @@ void game_state::render(sf::RenderTarget *target)
 {
     if (!target)
         target = window;
+
     render_texture.clear();
 
     render_texture.setView(view);

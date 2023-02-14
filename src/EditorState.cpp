@@ -248,9 +248,9 @@ void editor_state::render(sf::RenderTarget *target)
 
     target->setView(view);
     map->render(*target, mouse_pos_grid);
-    target->setView(window->getDefaultView());
-    // map->render_deferred(*target);
+    map->render_deferred(*target);
 
+    target->setView(window->getDefaultView());
     render_buttons(*target);
     render_gui(*target);
 
