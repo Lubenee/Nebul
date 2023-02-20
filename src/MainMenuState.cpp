@@ -42,9 +42,10 @@ void main_menu_state::init_background()
 
 void main_menu_state::init_buttons()
 {
-    buttons["GAME_STATE"] = new GUI::button(p2p_x(40.f), p2p_y(25.f),
-                                            p2p_x(15.f), p2p_y(6.4f),
-                                            "New Game", &font, 30,
+    const sf::VideoMode &vm = state_details->gfx_settings->resolution;
+    buttons["GAME_STATE"] = new GUI::button(GUI::p2p_x(40.f, vm), GUI::p2p_y(25.f, vm),
+                                            GUI::p2p_x(15.f, vm), GUI::p2p_y(6.4f, vm),
+                                            "New Game", &font, GUI::calc_char_size(vm),
                                             sf::Color(150, 150, 150, 200),
                                             sf::Color(250, 250, 250, 250),
                                             sf::Color(40, 40, 40, 80),
@@ -52,9 +53,9 @@ void main_menu_state::init_buttons()
                                             sf::Color(150, 150, 150, 0),
                                             sf::Color(20, 20, 20, 00));
 
-    buttons["EDITOR_STATE"] = new GUI::button(p2p_x(40.f), p2p_y(37.f),
-                                              p2p_x(15.f), p2p_y(6.4f),
-                                              "Editor", &font, 30,
+    buttons["EDITOR_STATE"] = new GUI::button(GUI::p2p_x(40.f, vm), GUI::p2p_y(37.f, vm),
+                                              GUI::p2p_x(15.f, vm), GUI::p2p_y(6.4f, vm),
+                                              "Editor", &font, GUI::calc_char_size(vm),
                                               sf::Color(150, 150, 150, 200),
                                               sf::Color(250, 250, 250, 250),
                                               sf::Color(40, 40, 40, 80),
@@ -62,9 +63,9 @@ void main_menu_state::init_buttons()
                                               sf::Color(150, 150, 150, 00),
                                               sf::Color(20, 20, 20, 00));
 
-    buttons["SETTINGS_STATE"] = new GUI::button(p2p_x(40.f), p2p_y(49.f),
-                                                p2p_x(15.f), p2p_y(6.4f),
-                                                "Settings", &font, 30,
+    buttons["SETTINGS_STATE"] = new GUI::button(GUI::p2p_x(40.f, vm), GUI::p2p_y(49.f, vm),
+                                                GUI::p2p_x(15.f, vm), GUI::p2p_y(6.4f, vm),
+                                                "Settings", &font, GUI::calc_char_size(vm),
                                                 sf::Color(150, 150, 150, 200),
                                                 sf::Color(250, 250, 250, 250),
                                                 sf::Color(40, 40, 40, 80),
@@ -72,9 +73,9 @@ void main_menu_state::init_buttons()
                                                 sf::Color(150, 150, 150, 00),
                                                 sf::Color(20, 20, 20, 00));
 
-    buttons["EXIT_STATE"] = new GUI::button(p2p_x(40.f), p2p_y(63.f),
-                                            p2p_x(15.f), p2p_y(6.4f),
-                                            "Quit", &font, 30,
+    buttons["EXIT_STATE"] = new GUI::button(GUI::p2p_x(40.f, vm), GUI::p2p_y(63.f, vm),
+                                            GUI::p2p_x(15.f, vm), GUI::p2p_y(6.4f, vm),
+                                            "Quit", &font, GUI::calc_char_size(vm),
                                             sf::Color(150, 150, 150, 200),
                                             sf::Color(250, 250, 250, 250),
                                             sf::Color(40, 40, 40, 80),

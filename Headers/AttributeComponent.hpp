@@ -32,9 +32,9 @@ public:
     int luck;
 
     /*  Functions.   */
-    void update_stats(const bool reset);
     void update();
     void update_level();
+    void update_stats(const bool reset);
     void print() const;
     void gain_exp(const int _exp);
 };

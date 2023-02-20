@@ -28,17 +28,17 @@ void settings_state::init_text()
 void settings_state::init_gui()
 {
   buttons["APPLY"] = new GUI::button(
-      p2p_x(65.f), p2p_y(80.f),
-      p2p_x(10.f), p2p_y(6.4f),
-      "Apply", &font, 30,
+      GUI::p2p_x(65.f, state_details->gfx_settings->resolution), GUI::p2p_y(80.f, state_details->gfx_settings->resolution),
+      GUI::p2p_x(10.f, state_details->gfx_settings->resolution), GUI::p2p_y(6.4f, state_details->gfx_settings->resolution),
+      "Apply", &font, GUI::calc_char_size(state_details->gfx_settings->resolution),
       sf::Color(150, 150, 150, 200), sf::Color(250, 250, 250, 250), sf::Color(40, 40, 40, 80),
       sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
   buttons["BACK"] = new GUI::button(
-      p2p_x(80.f), p2p_y(80.f),
-      p2p_x(10.f), p2p_y(6.4f),
-      "Back", &font,
-      30, sf::Color(150, 150, 150, 200), sf::Color(250, 250, 250, 250),
+      GUI::p2p_x(80.f, state_details->gfx_settings->resolution), GUI::p2p_y(80.f, state_details->gfx_settings->resolution),
+      GUI::p2p_x(10.f, state_details->gfx_settings->resolution), GUI::p2p_y(6.4f, state_details->gfx_settings->resolution),
+      "Back", &font, GUI::calc_char_size(state_details->gfx_settings->resolution),
+      sf::Color(150, 150, 150, 200), sf::Color(250, 250, 250, 250),
       sf::Color(40, 40, 40, 80), sf::Color(70, 70, 70, 0),
       sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
@@ -58,7 +58,9 @@ void settings_state::init_gui()
   }
 
   drop_lists["RESOLUTION"] = new GUI::drop_down_box(
-      400, 137, 200, 50, font, list, current_resolution_index);
+      GUI::p2p_x(50.f, state_details->gfx_settings->resolution), GUI::p2p_y(24.f, state_details->gfx_settings->resolution),
+      GUI::p2p_x(22.f, state_details->gfx_settings->resolution), GUI::p2p_x(5.5f, state_details->gfx_settings->resolution),
+      font, list, current_resolution_index);
 }
 
 void settings_state::init_keybinds()
@@ -140,8 +142,8 @@ void settings_state::button_handler()
       window->setFramerateLimit(state_details->gfx_settings->framerate_limit);
       background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x),
                                       static_cast<float>(window->getSize().y)));
-      buttons["APPLY"]->set_pos(p2p_x(65.f), p2p_y(80.f));
-      buttons["BACK"]->set_pos(p2p_x(80.f), p2p_y(80.f));
+      buttons["APPLY"]->set_pos(GUI::p2p_x(65.f, state_details->gfx_settings->resolution), GUI::p2p_y(80.f, state_details->gfx_settings->resolution));
+      buttons["BACK"]->set_pos(GUI::p2p_x(80.f, state_details->gfx_settings->resolution), GUI::p2p_y(80.f, state_details->gfx_settings->resolution));
     }
   }
 }

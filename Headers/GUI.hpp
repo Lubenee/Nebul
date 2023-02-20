@@ -171,6 +171,29 @@ namespace GUI
 
     max_press_time pt;
   };
+
+  /*
+    * @brief
+        Converts a percentage value to pixels relative to the current resolution on the x-axis.
+      @param        float percent       The percentage value.
+      @retval       const float         The calculated pixel value.
+    */
+  const float p2p_x(const float _percent, const sf::VideoMode &vm);
+
+  /*
+  * @brief
+      Converts a percentage value to pixels relative to the current resolution on the y-axis.
+    @param        float percent       The percentage value.
+    @retval       float pixels         Returns the calculated pixel value.
+  */
+  const float p2p_y(const float _percent, const sf::VideoMode &vm);
+
+  /*
+  * @brief
+      Calculates the character size for text using the current resolution and a constant (100).
+    @retval       unsigned            Returns the calculated character size value.
+  */
+  const unsigned calc_char_size(const sf::VideoMode &vm);
 } // namespace GUI
 
 #endif

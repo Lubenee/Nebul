@@ -16,22 +16,6 @@ public:
     virtual void update(const float &dt) = 0;
     virtual void render(sf::RenderTarget *target = nullptr) = 0;
 
-    /*
-    * @brief
-        Converts a percentage value to pixels relative to the current resolution on the x-axis.
-      @param        float percent       The percentage value.
-      @retval       const float         The calculated pixel value.
-    */
-    const float p2p_x(const float _percent);
-
-    /*
-    * @brief
-        Converts a percentage value to pixels relative to the current resolution on the y-axis.
-      @param        float percent       The percentage value.
-      @retval       float pixels         Returns the calculated pixel value.
-    */
-    const float p2p_y(const float _percent);
-
     const bool &get_quit() const;
     const bool pressable_button();
     const bool pressable_button_short();
@@ -77,7 +61,7 @@ protected:
 };
 
 /* Used to more efficiently send data between each state. */
-class state_data
+struct state_data
 {
 public:
     state_data() = default;
