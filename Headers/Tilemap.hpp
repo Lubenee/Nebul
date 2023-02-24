@@ -15,8 +15,10 @@ public:
     void update_collision(entity *entity, const float &dt);
 
     void update();
-    void render(sf::RenderTarget &target, const sf::Vector2i &grid_position, const bool show_collision = false);
-    void render_deferred(sf::RenderTarget &target);
+    void render(sf::RenderTarget &target, const sf::Vector2i &grid_position,
+                sf::Shader *shader = nullptr, const sf::Vector2f player_pos = sf::Vector2f(),
+                const bool show_collision = false);
+    void render_deferred(sf::RenderTarget &target, sf::Shader *shader = nullptr, const sf::Vector2f player_pos = sf::Vector2f());
 
     /* Takes three indicies from the mouse position in the grid and a tiles to that position if the internal tilemap array allows it .*/
     void add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool collision, const short type);

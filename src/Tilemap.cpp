@@ -154,22 +154,31 @@ void tilemap::update()
 {
 }
 
-void tilemap::render_deferred(sf::RenderTarget &target)
+void tilemap::render_deferred(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector2f player_pos)
 {
     while (!deferred_render_stack.empty())
     {
-        deferred_render_stack.top()->render(target);
+        if (shader)
+        {
+            deferred_render_stack.top()->render(target, shader, player_pos);
+        }
+        else
+        {
+            deferred_render_stack.top()->render(target);
+        }
         deferred_render_stack.pop();
     }
 }
 
-void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position, const bool show_collision)
+void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position,
+                     sf::Shader *shader, const sf::Vector2f player_pos,
+                     const bool show_collision)
 {
-    from_x = grid_position.x - 9;
+    from_x = grid_position.x - 15;
     if (from_x < 0)
         from_x = 0;
 
-    to_x = grid_position.x + 7;
+    to_x = grid_position.x + 16;
     if (to_x >= map_size_tiles.x)
         to_x = map_size_tiles.x;
 
@@ -177,7 +186,7 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
     if (from_y < 0)
         from_y = 0;
 
-    to_y = grid_position.y + 7;
+    to_y = grid_position.y + 10;
     if (to_y > map_size_tiles.y)
         to_y = map_size_tiles.y;
 
@@ -189,7 +198,16 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
                     if (map[x][y][layer][k]->get_type() == tt::ABOVE_PLAYER)
                         deferred_render_stack.push(map[x][y][layer][k]);
                     else
-                        map[x][y][layer][k]->render(target);
+                    {
+                        if (shader)
+                        {
+                            map[x][y][layer][k]->render(target, shader, player_pos);
+                        }
+                        else
+                        {
+                            map[x][y][layer][k]->render(target);
+                        }
+                    }
 
                     if (show_collision)
                     {
@@ -200,7 +218,6 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
                         }
                     }
                 }
-    // render_deferred(target);
 }
 
 void tilemap::add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool collision, const short type)

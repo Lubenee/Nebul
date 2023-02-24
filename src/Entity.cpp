@@ -50,19 +50,26 @@ void entity::update(const float &dt)
         mc->update(dt);
 }
 
-void entity::render(sf::RenderTarget &target)
-{
-    target.draw(sprite);
-    // if (hc)
-    //     hc->render(target);
-}
-
 const sf::Vector2f &entity::get_pos() const
 {
     if (hc)
         return hc->get_pos();
 
     return sprite.getPosition();
+}
+
+const sf::Vector2f entity::get_center() const
+{
+    if (hc)
+        return hc->get_pos() +
+               sf::Vector2f(
+                   hc->get_global_bounds().width / 2.f,
+                   hc->get_global_bounds().height / 2.f);
+
+    return sprite.getPosition() +
+           sf::Vector2f(
+               sprite.getGlobalBounds().width / 2.f,
+               sprite.getGlobalBounds().height / 2.f);
 }
 
 const sf::FloatRect entity::get_global_bounds() const

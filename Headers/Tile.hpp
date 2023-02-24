@@ -18,7 +18,7 @@ public:
          bool collision = false, short type = tt::DEFAULT);
 
     void update();
-    void render(sf::RenderTarget &target);
+    void render(sf::RenderTarget &target, sf::Shader *shader = nullptr, const sf::Vector2f player_pos = sf::Vector2f());
 
     const short get_type() const;
     const std::string get_as_string() const;
@@ -35,7 +35,7 @@ public:
     virtual ~tile();
 
 protected:
-    sf::RectangleShape shape;
+    sf::Sprite shape;
     sf::IntRect texture_rect;
     bool collision;
     short type;

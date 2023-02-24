@@ -98,6 +98,20 @@ void player::update(const float &dt)
     update_animation(dt);
 }
 
+void player::render(sf::RenderTarget &target, sf::Shader *shader)
+{
+    if (shader)
+    {
+        shader->setUniform("hasTexture", true);
+        shader->setUniform("light", get_center());
+        target.draw(sprite, shader);
+    }
+    else
+    {
+        target.draw(sprite);
+    }
+}
+
 void player::lose_hp(const int hp)
 {
     at_c->hp -= hp;

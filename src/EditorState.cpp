@@ -250,7 +250,7 @@ void editor_state::render(sf::RenderTarget *target)
         target = window;
 
     target->setView(view);
-    map->render(*target, mouse_pos_grid, true);
+    map->render(*target, mouse_pos_grid, nullptr, sf::Vector2f(), true);
     map->render_deferred(*target);
 
     target->setView(window->getDefaultView());

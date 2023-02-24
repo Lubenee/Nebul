@@ -28,6 +28,7 @@ private:
     void init_pause_menu();
     void init_view();
     void init_render_canvas();
+    void init_shaders();
 
     void update_view(const float &dt);
     void update_input(const float &dt);
@@ -41,8 +42,11 @@ private:
     /* To remove weird texture glitching and make rendering smoother, everything in the game is first drawn on this sort of canvas texture,
     and then gets pasted on the screen all at once.*/
     sf::RenderTexture render_texture;
+
     /* This sprite "holds" our canvas. */
     sf::Sprite render_sprite;
+
+    sf::Shader core_shader;
 
     tilemap *map;
     player *plr;

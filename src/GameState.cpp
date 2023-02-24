@@ -12,6 +12,14 @@ game_state::game_state(state_data *_state_data)
     init_map();
     init_view();
     init_render_canvas();
+    init_shaders();
+}
+
+void game_state::init_shaders()
+{
+    if (!core_shader.loadFromFile("../Shaders/vertex_shader.vert", "../Shaders/fragment_shader.frag"))
+        throw("ERROR::GAME_STATE::FAILED TO LOAD SHADERS.\n");
+    std::cout << "Shaders!!!!!\n";
 }
 
 void game_state::init_player_gui()
@@ -158,10 +166,14 @@ void game_state::render(sf::RenderTarget *target)
 
     render_texture.setView(view);
 
-    map->render(render_texture, plr->get_gridpos(static_cast<int>(state_details->grid_size)));
-    plr->render(render_texture);
+    map->render(render_texture,
+                plr->get_gridpos(static_cast<int>(state_details->grid_size)),
+                &core_shader,
+                plr->get_center(),
+                false);
+    plr->render(render_texture, &core_shader);
 
-    map->render_deferred(render_texture);
+    map->render_deferred(render_texture, &core_shader, plr->get_center());
 
     render_texture.setView(render_texture.getDefaultView());
     plr_gui->render(render_texture);

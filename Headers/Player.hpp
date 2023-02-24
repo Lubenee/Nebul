@@ -8,6 +8,8 @@ class player : public entity
 public:
     player(float _x, float _y, sf::Texture &_tex_sheet);
     virtual void update(const float &dt) override;
+    virtual void render(sf::RenderTarget &target, sf::Shader *shader = nullptr) override;
+
     void update_animation(const float &dt);
     void update_attack();
 

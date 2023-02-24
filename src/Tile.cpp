@@ -11,9 +11,8 @@ tile::tile(size_t x, size_t y, float grid_size,
            sf::Texture &_tex, const sf::IntRect &_rect,
            bool collision, short type)
 {
-    shape.setSize(sf::Vector2f(grid_size, grid_size));
     shape.setPosition(x * grid_size, y * grid_size);
-    shape.setTexture(&_tex);
+    shape.setTexture(_tex);
     shape.setTextureRect(_rect);
     this->collision = collision;
     this->type = type;
@@ -22,9 +21,18 @@ tile::tile(size_t x, size_t y, float grid_size,
 
 void tile::update() {}
 
-void tile::render(sf::RenderTarget &target)
+void tile::render(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector2f player_pos)
 {
-    target.draw(shape);
+    if (shader)
+    {
+        shader->setUniform("hasTexture", true);
+        shader->setUniform("lightPos", player_pos);
+        target.draw(shape, shader);
+    }
+    else
+    {
+        target.draw(shape);
+    }
 }
 
 const short tile::get_type() const

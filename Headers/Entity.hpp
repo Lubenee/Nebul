@@ -16,12 +16,13 @@ public:
     void create_attribute_component(const int _level);
 
     virtual void update(const float &dt) = 0;
-    virtual void render(sf::RenderTarget &target);
+    virtual void render(sf::RenderTarget &target, sf::Shader *shader = nullptr) = 0;
 
     virtual void set_pos(const float _x, const float _y);
     virtual void move(const float _x, const float _y, const float &dt);
 
     virtual const sf::Vector2f &get_pos() const;
+    virtual const sf::Vector2f get_center() const;
     virtual const sf::FloatRect get_global_bounds() const;
     virtual const sf::Vector2i get_gridpos(const int grid_size) const;
     virtual const sf::FloatRect get_next_pos(const float &dt) const;
