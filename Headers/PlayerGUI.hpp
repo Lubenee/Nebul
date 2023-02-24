@@ -1,12 +1,13 @@
 #ifndef PLAYERGUI_H
 #define PLAYERGUI_H
 #include "Player.hpp"
+#include "GUI.hpp"
 class player;
 
 class player_gui
 {
 public:
-    player_gui(player *_player);
+    player_gui(player *_player, sf::VideoMode &vm);
 
     void update(const float &dt);
     void render(sf::RenderTarget &target);
@@ -30,6 +31,7 @@ private:
 private:
     player *plr;
 
+    sf::VideoMode &vm;
     sf::Font font;
 
     /* HP Bar. */

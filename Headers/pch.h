@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <iostream>
+#include <array>
+#include <map>
 #include <ctime>
 #include <cstdlib>
 #include <fstream>
@@ -16,15 +18,11 @@
 #include <set>
 #include <deque>
 #include <memory>
-#include <array>
-#include <map>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
-
-
 
 #endif

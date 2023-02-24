@@ -7,14 +7,19 @@ player::player(float _x, float _y, sf::Texture &_tex_sheet)
 
     set_pos(_x, _y);
 
-    create_movment_component(400.f, 1500.f, 400.f);
-    create_hitbox_component(86.f, 67.f, 86.f, 100.f, sprite);
+    create_hitbox_component(10.f, 5.f, 44.f, 54.f, sprite);
+    create_movment_component(250.f, 1500.f, 900.f);
     create_animation_component(_tex_sheet);
     create_attribute_component(1);
 
-    ac->add_animation("IDLE", 8.f, 0, 0, 13, 0, 192, 192);
-    ac->add_animation("WALK", 3.f, 0, 1, 11, 1, 192, 192);
-    ac->add_animation("ATTACK", 4.f, 0, 2, 13, 2, 192 * 2, 192);
+    ac->add_animation("IDLE", 15.f, 0, 0, 8, 0, 64, 64);
+    ac->add_animation("WALK_DOWN", 10.f, 0, 1, 3, 1, 64, 64);
+    ac->add_animation("WALK_LEFT", 10.f, 4, 1, 7, 1, 64, 64);
+
+    ac->add_animation("WALK_RIGHT", 10.f, 8, 1, 11, 1, 64, 64);
+    ac->add_animation("WALK_UP", 10.f, 12, 1, 15, 1, 64, 64);
+
+    // ac->add_animation("ATTACK", 4.f, 0, 2, 13, 2, 192 * 2, 192);
 }
 
 void player::init_variables()
@@ -60,42 +65,32 @@ void player::update_animation(const float &dt)
         ac->play("IDLE", dt);
     else if (mc->get_state(LEFT))
     {
-        if (sprite.getScale().x < 0.f)
-        {
-            sprite.setOrigin(0.f, 0.f);
-            sprite.setScale(1.f, 1.f);
-        }
-        ac->play("WALK", dt, mc->get_velocity().x, mc->get_max_velocity());
+        ac->play("WALK_LEFT", dt, mc->get_velocity().x, mc->get_max_velocity());
     }
     else if (mc->get_state(RIGHT))
     {
-        if (sprite.getScale().x > 0.f)
-        {
-            sprite.setOrigin(258.f, 0.f);
-            sprite.setScale(-1.f, 1.f);
-        }
-        ac->play("WALK", dt, mc->get_velocity().x, mc->get_max_velocity());
+        ac->play("WALK_RIGHT", dt, mc->get_velocity().x, mc->get_max_velocity());
     }
     else if (mc->get_state(UP))
     {
-        ac->play("WALK", dt, mc->get_velocity().y, mc->get_max_velocity());
+        ac->play("WALK_UP", dt, mc->get_velocity().y, mc->get_max_velocity());
     }
     else if (mc->get_state(DOWN))
     {
-        ac->play("WALK", dt, mc->get_velocity().y, mc->get_max_velocity());
+        ac->play("WALK_DOWN", dt, mc->get_velocity().y, mc->get_max_velocity());
     }
 }
 
 void player::update_attack()
 {
-    if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
-        attacking = true;
+    // if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+    //     attacking = true;
 }
 
 void player::update(const float &dt)
 {
     // TODO Debug print
-    at_c->print();
+    // at_c->print();
 
     mc->update(dt);
     hc->update();

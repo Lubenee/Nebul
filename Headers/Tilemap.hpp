@@ -15,7 +15,7 @@ public:
     void update_collision(entity *entity, const float &dt);
 
     void update();
-    void render(sf::RenderTarget &target, const sf::Vector2i &grid_position);
+    void render(sf::RenderTarget &target, const sf::Vector2i &grid_position, const bool show_collision = false);
     void render_deferred(sf::RenderTarget &target);
 
     /* Takes three indicies from the mouse position in the grid and a tiles to that position if the internal tilemap array allows it .*/
@@ -45,7 +45,7 @@ public:
 private:
     void init_textures();
 
-    void update_worldborder_collision(entity *entity);
+    void update_worldborder_collision(entity *entity, const float &dt);
 
     void clear_map();
 

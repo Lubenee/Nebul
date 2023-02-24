@@ -51,7 +51,7 @@ void tilemap::update_collision(entity *entity, const float &dt)
     if (entity == nullptr)
         return;
     // Window collision
-    update_worldborder_collision(entity);
+    update_worldborder_collision(entity, dt);
 
     layer = 0;
 
@@ -81,25 +81,9 @@ void tilemap::update_collision(entity *entity, const float &dt)
                 sf::FloatRect next_pos = entity->get_next_pos(dt);
                 if (map[x][y][layer][k]->get_collision() && map[x][y][layer][k]->intersects(next_pos))
                 {
-                    map.reserve(map_size_tiles.x);
-
-                    for (size_t x = 0; x < map_size_tiles.x; ++x)
-                    {
-                        map.push_back(std::vector<std::vector<std::vector<tile *>>>());
-                        for (size_t y = 0; y < map_size_tiles.y; ++y)
-                        {
-                            // Allocate enough empty slots for the map vector.
-                            map[x].reserve(map_size_tiles.y);
-                            map[x].push_back(std::vector<std::vector<tile *>>());
-                            for (size_t z = 0; z < layers; ++z)
-                            {
-                                map[x][y].reserve(layers);
-                            }
-                        }
-                    }
                     sf::FloatRect player_bounds = entity->get_global_bounds();
                     sf::FloatRect wall_bounds = map[x][y][layer][k]->get_global_bounds();
-                    /* Botton collision. */
+                    /* Bottom collision. */
                     if (player_bounds.top < wall_bounds.top &&
                         player_bounds.top + player_bounds.height < wall_bounds.top + wall_bounds.width &&
                         player_bounds.left < wall_bounds.left + wall_bounds.width &&
@@ -115,7 +99,7 @@ void tilemap::update_collision(entity *entity, const float &dt)
                              player_bounds.left + player_bounds.width > wall_bounds.left)
                     {
                         entity->reset_velocityY();
-                        entity->set_pos(player_bounds.left, wall_bounds.top + player_bounds.height);
+                        entity->set_pos(player_bounds.left, wall_bounds.top + player_bounds.height + 10.f);
                     }
                     /* Right collision. */
                     if (player_bounds.left < wall_bounds.left &&
@@ -141,25 +125,25 @@ void tilemap::update_collision(entity *entity, const float &dt)
     }
 }
 
-void tilemap::update_worldborder_collision(entity *entity)
+void tilemap::update_worldborder_collision(entity *entity, const float &dt)
 {
-    if (entity->get_pos().x < 0.f)
+    if (entity->get_next_pos(dt).left < 0.f)
     {
         entity->set_pos(0.f, entity->get_pos().y);
         entity->reset_velocityX();
     }
-    else if (entity->get_pos().x + entity->get_global_bounds().width > map_size_pixels.x)
+    else if (entity->get_next_pos(dt).left + entity->get_global_bounds().width > map_size_pixels.x)
     {
         entity->set_pos(map_size_pixels.x - entity->get_global_bounds().width, entity->get_pos().y);
         entity->reset_velocityX();
     }
 
-    if (entity->get_pos().y < 0.f)
+    if (entity->get_next_pos(dt).top < 0.f)
     {
         entity->set_pos(entity->get_pos().x, 0.f);
         entity->reset_velocityY();
     }
-    else if (entity->get_pos().y + entity->get_global_bounds().height > map_size_pixels.y)
+    else if (entity->get_next_pos(dt).top + entity->get_global_bounds().height > map_size_pixels.y)
     {
         entity->set_pos(entity->get_pos().x, map_size_pixels.y - entity->get_global_bounds().height);
         entity->reset_velocityY();
@@ -179,7 +163,7 @@ void tilemap::render_deferred(sf::RenderTarget &target)
     }
 }
 
-void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position)
+void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position, const bool show_collision)
 {
     from_x = grid_position.x - 9;
     if (from_x < 0)
@@ -203,17 +187,17 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
                 if (map[x][y][layer][k] != nullptr)
                 {
                     if (map[x][y][layer][k]->get_type() == tt::ABOVE_PLAYER)
-                    {
                         deferred_render_stack.push(map[x][y][layer][k]);
-                    }
                     else
-                    {
                         map[x][y][layer][k]->render(target);
-                    }
-                    if (map[x][y][layer][k]->get_collision())
+
+                    if (show_collision)
                     {
-                        collision_box.setPosition(map[x][y][layer][k]->get_pos()); // TODO remove later.
-                        target.draw(collision_box);
+                        if (map[x][y][layer][k]->get_collision())
+                        {
+                            collision_box.setPosition(map[x][y][layer][k]->get_pos()); // TODO remove later.
+                            target.draw(collision_box);
+                        }
                     }
                 }
     // render_deferred(target);

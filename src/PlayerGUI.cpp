@@ -1,9 +1,9 @@
 #include "../Headers/pch.h"
 #include "../Headers/PlayerGUI.hpp"
 
-player_gui::player_gui(player *_player)
+player_gui::player_gui(player *_player, sf::VideoMode &vm)
+    : plr(_player), vm(vm)
 {
-    plr = _player;
     init_font();
     init_hp_bar();
     init_exp_bar();
@@ -18,26 +18,27 @@ void player_gui::init_font()
 
 void player_gui::init_level_bar()
 {
-    float width = 30.f;
-    float height = 30.f;
-    float x = 20.f;
-    float y = 130.f;
+    float width = GUI::p2p_x(2.f, vm);
+    float height = GUI::p2p_y(4.f, vm);
+    float x = GUI::p2p_x(1.f, vm);
+    float y = GUI::p2p_x(2.6f, vm);
 
     level_bar_back.setSize(sf::Vector2f(width, height));
     level_bar_back.setFillColor(sf::Color(50, 50, 50, 200));
     level_bar_back.setPosition(x, y);
 
     level_bar_text.setFont(font);
-    level_bar_text.setCharacterSize(12);
-    level_bar_text.setPosition(level_bar_back.getPosition().x + 10.f, level_bar_back.getPosition().y + 5.f);
+    level_bar_text.setCharacterSize(GUI::calc_char_size(vm, 150));
+    level_bar_text.setPosition(level_bar_back.getPosition().x + GUI::p2p_x(0.5f, vm),
+                               level_bar_back.getPosition().y + GUI::p2p_y(1.f, vm));
 }
 
 void player_gui::init_exp_bar()
 {
-    float width = 200.f;
-    float height = 30.f;
-    float x = 20.f;
-    float y = 60.f;
+    float width = GUI::p2p_x(10.f, vm);
+    float height = GUI::p2p_y(4.f, vm);
+    float x = GUI::p2p_x(1.f, vm);
+    float y = GUI::p2p_x(7.6f, vm);
 
     exp_bar_max_size = width;
 
@@ -50,16 +51,17 @@ void player_gui::init_exp_bar()
     exp_bar_inner.setPosition(exp_bar_back.getPosition());
 
     exp_bar_text.setFont(font);
-    exp_bar_text.setCharacterSize(10);
-    exp_bar_text.setPosition(exp_bar_inner.getPosition().x + 10.f, exp_bar_inner.getPosition().y + 8.f);
+    exp_bar_text.setCharacterSize(GUI::calc_char_size(vm, 150));
+    exp_bar_text.setPosition(exp_bar_inner.getPosition().x + GUI::p2p_x(0.53f, vm),
+                             exp_bar_inner.getPosition().y + GUI::p2p_y(0.15f, vm));
 }
 
 void player_gui::init_hp_bar()
 {
-    float width = 250.f;
-    float height = 30.f;
-    float x = 20.f;
-    float y = 20.f;
+    float width = GUI::p2p_x(10.4f, vm);
+    float height = GUI::p2p_y(4.5f, vm);
+    float x = GUI::p2p_x(1.f, vm);
+    float y = GUI::p2p_x(12.3f, vm);
 
     hp_bar_max_size = width;
 
@@ -72,8 +74,9 @@ void player_gui::init_hp_bar()
     hp_bar_inner.setPosition(hp_bar_back.getPosition());
 
     hp_bar_text.setFont(font);
-    hp_bar_text.setCharacterSize(10);
-    hp_bar_text.setPosition(hp_bar_inner.getPosition().x + 10.f, hp_bar_inner.getPosition().y + 8.f);
+    hp_bar_text.setCharacterSize(GUI::calc_char_size(vm, 150));
+    hp_bar_text.setPosition(hp_bar_inner.getPosition().x + GUI::p2p_x(0.5f, vm),
+                            hp_bar_inner.getPosition().y + GUI::p2p_y(2.f, vm));
 }
 
 void player_gui::update_hp_bar()

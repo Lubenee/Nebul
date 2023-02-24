@@ -7,37 +7,26 @@ settings_state::settings_state(state_data *_state_data) : state(_state_data)
   init_fonts();
   init_background();
   init_gui();
-  init_text();
   check = new GUI::check_box(400.f, 210.f, 50, 50,
                              sf::Color(250, 50, 100, 150),
                              sf::Color(50, 150, 50, 50),
                              sf::Color(50, 250, 100, 150));
 }
 
-void settings_state::init_text()
-{
-  options_text.setFont(font);
-  options_text.setPosition(130, 145);
-  options_text.setCharacterSize(30);
-  options_text.setFillColor(sf::Color(255, 155, 55, 255));
-  options_text.setString("Resolution \n\nFullscreen");
-  // options_text.setString("Resolution \n\nFullscreen \n\nAntialiasing
-  // \n\nVsync \n\n");
-}
-
 void settings_state::init_gui()
 {
+  const sf::VideoMode &vm = state_details->gfx_settings->resolution;
   buttons["APPLY"] = new GUI::button(
-      GUI::p2p_x(65.f, state_details->gfx_settings->resolution), GUI::p2p_y(80.f, state_details->gfx_settings->resolution),
-      GUI::p2p_x(10.f, state_details->gfx_settings->resolution), GUI::p2p_y(6.4f, state_details->gfx_settings->resolution),
+      GUI::p2p_x(65.f, vm), GUI::p2p_y(80.f, vm),
+      GUI::p2p_x(10.f, vm), GUI::p2p_y(6.4f, vm),
       "Apply", &font, GUI::calc_char_size(state_details->gfx_settings->resolution),
       sf::Color(150, 150, 150, 200), sf::Color(250, 250, 250, 250), sf::Color(40, 40, 40, 80),
       sf::Color(70, 70, 70, 0), sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
 
   buttons["BACK"] = new GUI::button(
-      GUI::p2p_x(80.f, state_details->gfx_settings->resolution), GUI::p2p_y(80.f, state_details->gfx_settings->resolution),
-      GUI::p2p_x(10.f, state_details->gfx_settings->resolution), GUI::p2p_y(6.4f, state_details->gfx_settings->resolution),
-      "Back", &font, GUI::calc_char_size(state_details->gfx_settings->resolution),
+      GUI::p2p_x(80.f, vm), GUI::p2p_y(80.f, vm),
+      GUI::p2p_x(10.f, vm), GUI::p2p_y(6.4f, vm),
+      "Back", &font, GUI::calc_char_size(vm),
       sf::Color(150, 150, 150, 200), sf::Color(250, 250, 250, 250),
       sf::Color(40, 40, 40, 80), sf::Color(70, 70, 70, 0),
       sf::Color(150, 150, 150, 0), sf::Color(20, 20, 20, 0));
@@ -50,6 +39,8 @@ void settings_state::init_gui()
   // each
   for (size_t i = 0; i < vms.size() / 7; ++i)
   {
+    if (vms[i].width < 800)
+      break;
     list.push_back(std::to_string(vms[i].width) + 'x' +
                    std::to_string(vms[i].height));
     if (vms[i].width == state_details->window->getSize().x &&
@@ -58,9 +49,18 @@ void settings_state::init_gui()
   }
 
   drop_lists["RESOLUTION"] = new GUI::drop_down_box(
-      GUI::p2p_x(50.f, state_details->gfx_settings->resolution), GUI::p2p_y(24.f, state_details->gfx_settings->resolution),
-      GUI::p2p_x(22.f, state_details->gfx_settings->resolution), GUI::p2p_x(5.5f, state_details->gfx_settings->resolution),
+      GUI::p2p_x(50.f, vm), GUI::p2p_y(24.f, vm),
+      GUI::p2p_x(22.f, vm), GUI::p2p_x(5.5f, vm),
       font, list, current_resolution_index);
+
+  // Text init
+  options_text.setFont(font);
+  options_text.setPosition(GUI::p2p_x(16.f, vm), GUI::p2p_y(27.f, vm));
+  options_text.setCharacterSize(GUI::calc_char_size(vm));
+  options_text.setFillColor(sf::Color(255, 155, 55, 255));
+  options_text.setString("Resolution \n\nFullscreen");
+  // options_text.setString("Resolution \n\nFullscreen \n\nAntialiasing
+  // \n\nVsync \n\n");
 }
 
 void settings_state::init_keybinds()
@@ -92,6 +92,22 @@ void settings_state::init_background()
                                   static_cast<float>(window->getSize().y)));
 
   background.setTexture(&background_texture);
+}
+
+void settings_state::reset_gui()
+{
+  background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x),
+                                  static_cast<float>(window->getSize().y)));
+
+  for (auto &i : buttons)
+    delete i.second;
+  buttons.clear();
+
+  for (auto &i : drop_lists)
+    delete i.second;
+  drop_lists.clear();
+
+  init_gui();
 }
 
 void settings_state::update_gui()
@@ -140,10 +156,7 @@ void settings_state::button_handler()
       }
       window->setVerticalSyncEnabled(state_details->gfx_settings->vsync);
       window->setFramerateLimit(state_details->gfx_settings->framerate_limit);
-      background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x),
-                                      static_cast<float>(window->getSize().y)));
-      buttons["APPLY"]->set_pos(GUI::p2p_x(65.f, state_details->gfx_settings->resolution), GUI::p2p_y(80.f, state_details->gfx_settings->resolution));
-      buttons["BACK"]->set_pos(GUI::p2p_x(80.f, state_details->gfx_settings->resolution), GUI::p2p_y(80.f, state_details->gfx_settings->resolution));
+      reset_gui();
     }
   }
 }

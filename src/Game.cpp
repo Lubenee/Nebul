@@ -2,7 +2,7 @@
 #include "../Headers/Game.hpp"
 
 game::game()
-    : grid_size(100.f)
+    : grid_size(64.f)
 {
     // Order!!
     gfx.load_from_file("../Config/window.ini");

@@ -16,7 +16,7 @@ game_state::game_state(state_data *_state_data)
 
 void game_state::init_player_gui()
 {
-    plr_gui = new player_gui(plr);
+    plr_gui = new player_gui(plr, state_details->gfx_settings->resolution);
 }
 
 void game_state::init_render_canvas()
@@ -43,12 +43,15 @@ void game_state::init_view()
 
 void game_state::init_pause_menu()
 {
-    p_menu = new pause_menu(*window, p_menu_font);
+    const sf::VideoMode &vm = state_details->gfx_settings->resolution;
+    p_menu = new pause_menu(state_details->gfx_settings->resolution, p_menu_font);
+
+    p_menu->add_button("QUIT", GUI::p2p_y(85, vm), GUI::p2p_x(15.f, vm), GUI::p2p_y(6.4f, vm), GUI::calc_char_size(vm), "Quit");
 }
 
 void game_state::init_map()
 {
-    map = new tilemap(state_details->grid_size, 150, 150, "../Assets/tiles/tilesheet1.png");
+    map = new tilemap(state_details->grid_size, 100, 100, "../Assets/tiles/tilesheet3.png");
     map->load_tilemap("savefile.sav");
 }
 
@@ -59,7 +62,7 @@ void game_state::init_player()
 
 void game_state::init_assets()
 {
-    if (!textures["PLAYER_SHEET"].loadFromFile("../Assets/Images/Player/PLAYER_SHEET.png"))
+    if (!textures["PLAYER_SHEET"].loadFromFile("../Assets/Images/Player/PLAYER_SHEET2.png"))
         throw("ERROR::GAME_STATE_H::INIT_TEXTURES::FAILED TO LOAD PLAYER TEXTURE SHEET");
     if (!p_menu_font.loadFromFile("../Fonts/pixelfont.TTF"))
         throw("ERROR::MAIN_MENU_STATE_H::COULD NOT LOAD FONT");
@@ -118,7 +121,9 @@ void game_state::update_player_gui(const float &dt)
 void game_state::update_view(const float &dt)
 {
     /* std::floor is used in order to fix line tearing while rendering. That way the player.pos values are a bit more precise. */
-    view.setCenter(std::floor(plr->get_pos().x), std::floor(plr->get_pos().y));
+    view.setCenter(
+        std::floor(plr->get_pos().x + (static_cast<float>(mouse_pos_window.x) - static_cast<float>(state_details->gfx_settings->resolution.width / 2)) / 6.f),
+        std::floor(plr->get_pos().y + (static_cast<float>(mouse_pos_window.y) - static_cast<float>(state_details->gfx_settings->resolution.height / 2)) / 6.f));
 }
 
 void game_state::update_tilemap(const float &dt)
@@ -130,7 +135,6 @@ void game_state::update_tilemap(const float &dt)
 void game_state::update(const float &dt)
 {
     update_input(dt);
-
     if (!paused)
     {
         update_view(dt);

@@ -11,7 +11,7 @@ const float GUI::p2p_y(const float _percent, const sf::VideoMode &vm)
     return std::floor(static_cast<float>(vm.height) * (_percent / 100.f));
 }
 
-const unsigned GUI::calc_char_size(const sf::VideoMode &vm)
+const unsigned GUI::calc_char_size(const sf::VideoMode &vm, const unsigned modifier)
 {
-    return static_cast<unsigned>((vm.width + vm.height) / 50);
+    return static_cast<unsigned>((vm.width + vm.height) / modifier);
 }

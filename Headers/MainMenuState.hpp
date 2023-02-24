@@ -11,12 +11,13 @@ class settings_state;
 class main_menu_state : public state
 {
 public:
-    main_menu_state(state_data* state_data);
+    main_menu_state(state_data *state_data);
     void init_keybinds();
     void init_fonts();
-    void init_buttons();
+    void init_gui();
     void init_background();
 
+    void reset_gui();
 
     void update_input(const float &dt);
     void update_buttons();
@@ -34,7 +35,6 @@ private:
     sf::Font font;
 
     std::map<std::string, GUI::button *> buttons;
-
 };
 
 #endif

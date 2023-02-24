@@ -53,8 +53,8 @@ void entity::update(const float &dt)
 void entity::render(sf::RenderTarget &target)
 {
     target.draw(sprite);
-    if (hc)
-        hc->render(target);
+    // if (hc)
+    //     hc->render(target);
 }
 
 const sf::Vector2f &entity::get_pos() const

@@ -36,7 +36,7 @@ void editor_state::init_gui()
     selector.setOutlineColor(sf::Color(50, 200, 20, 255));
     selector.setTexture(map->get_tilesheet());
 
-    tex_selector = new GUI::texture_selector(20.f, 20.f, 800.f, 200.f, state_details->grid_size, *(map->get_tilesheet()), font);
+    tex_selector = new GUI::texture_selector(20.f, 20.f, 640.f, 256.f, state_details->grid_size, *(map->get_tilesheet()), font);
 }
 
 void editor_state::init_text()
@@ -48,9 +48,12 @@ void editor_state::init_text()
 
 void editor_state::init_pause_menu()
 {
-    p_menu = new pause_menu(*window, font);
-    p_menu->add_button("SAVE", 190.f, "Save");
-    p_menu->add_button("LOAD", 260.f, "Load");
+    const sf::VideoMode &vm = state_details->gfx_settings->resolution;
+    p_menu = new pause_menu(state_details->gfx_settings->resolution, font);
+
+    p_menu->add_button("SAVE", GUI::p2p_y(20, vm), GUI::p2p_x(15.f, vm), GUI::p2p_y(6.4f, vm), GUI::calc_char_size(vm), "Save");
+    p_menu->add_button("LOAD", GUI::p2p_y(30, vm), GUI::p2p_x(15.f, vm), GUI::p2p_y(6.4f, vm), GUI::calc_char_size(vm), "Load");
+    p_menu->add_button("QUIT", GUI::p2p_y(85, vm), GUI::p2p_x(15.f, vm), GUI::p2p_y(6.4f, vm), GUI::calc_char_size(vm), "Quit");
 }
 
 void editor_state::init_tilemap()
@@ -58,9 +61,9 @@ void editor_state::init_tilemap()
     tile_collision = false;
     tile_layers = 0;
     tile_type = tt::DEFAULT;
-    map_size.x = 15;
-    map_size.y = 15;
-    map = new tilemap(state_details->grid_size, 150, 150, "../Assets/tiles/tilesheet1.png");
+    map_size.x = 100;
+    map_size.y = 100;
+    map = new tilemap(state_details->grid_size, 100, 100, "../Assets/tiles/tilesheet3.png");
     texture_rect = sf::IntRect(200, 0, static_cast<int>(state_details->grid_size), static_cast<int>(state_details->grid_size));
     map->load_tilemap("savefile.sav");
 }
@@ -247,7 +250,7 @@ void editor_state::render(sf::RenderTarget *target)
         target = window;
 
     target->setView(view);
-    map->render(*target, mouse_pos_grid);
+    map->render(*target, mouse_pos_grid, true);
     map->render_deferred(*target);
 
     target->setView(window->getDefaultView());

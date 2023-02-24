@@ -7,7 +7,7 @@ main_menu_state::main_menu_state(state_data *state_data)
 {
     init_keybinds();
     init_fonts();
-    init_buttons();
+    init_gui();
     init_background();
 }
 
@@ -40,7 +40,7 @@ void main_menu_state::init_background()
     background.setTexture(&background_texture);
 }
 
-void main_menu_state::init_buttons()
+void main_menu_state::init_gui()
 {
     const sf::VideoMode &vm = state_details->gfx_settings->resolution;
     buttons["GAME_STATE"] = new GUI::button(GUI::p2p_x(40.f, vm), GUI::p2p_y(25.f, vm),
@@ -82,6 +82,17 @@ void main_menu_state::init_buttons()
                                             sf::Color(70, 70, 70, 00),
                                             sf::Color(150, 150, 150, 00),
                                             sf::Color(20, 20, 20, 00));
+}
+
+void main_menu_state::reset_gui()
+{
+    background.setSize(sf::Vector2f(static_cast<float>(window->getSize().x), static_cast<float>(window->getSize().y)));
+
+    for (auto &i : buttons)
+        delete i.second;
+    buttons.clear();
+
+    init_gui();
 }
 
 void main_menu_state::update_buttons()
