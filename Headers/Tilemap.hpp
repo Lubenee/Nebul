@@ -11,21 +11,49 @@ class tilemap
 public:
     tilemap(float _grid_size, int width, int height, const std::string texture_file);
 
-    /* Updates world border collision & tile collison with any given entity. */
+    /* @brief Updates world border collision & tile collison with any given entity. */
     void update_collision(entity *entity, const float &dt);
 
     void update();
-    void render(sf::RenderTarget &target, const sf::Vector2i &grid_position,
-                sf::Shader *shader = nullptr, const sf::Vector2f player_pos = sf::Vector2f(),
-                const bool show_collision = false);
-    void render_deferred(sf::RenderTarget &target, sf::Shader *shader = nullptr, const sf::Vector2f player_pos = sf::Vector2f());
 
-    /* Takes three indicies from the mouse position in the grid and a tiles to that position if the internal tilemap array allows it .*/
+    /* @brief Renders the tilemap. Utilizes tile culling.
+     *   @param target               Render target.
+     *   @param grid_position        Used to cull tiles according to this position.
+     *   @param shader               (Optional) Default value is nullptr.
+     *   @param light_src            (Optional) Light source for the shaders. Default value is (0,0)
+     *   @param show_collision       (Optinal) Whether to outline collidable tiles in red color. Mostly used in Editor state. Default value is false.
+     */
+    void render(sf::RenderTarget &target, const sf::Vector2i &grid_position,
+                sf::Shader *shader = nullptr, const sf::Vector2f light_src = sf::Vector2f(),
+                const bool show_collision = false);
+
+    /*  @brief Saves tiles that should be rendered above the rest of the tilemap in a separate vector and renders them using this function.
+     *   @param target                 Render target.
+     *   @param shader                 (Optional) Default value is nullptr.
+     *   @param light_src              (Optional) Light source for the shaders. Default value is (0,0)
+     */
+    void render_deferred(sf::RenderTarget &target, sf::Shader *shader = nullptr, const sf::Vector2f light_src = sf::Vector2f());
+
+    /* @brief Takes three indicies from the mouse position in the grid and a tiles to that position if the internal tilemap array allows it .
+    *   @param x               Grid position on the X axis for the new tile.
+        @param y               Grid position on the Y axis for the new tile.
+        @param layer           The number of layers on the X,Y position. (More than 5 layers will be ignored.)
+        @param _rect           Int Recrangle for the sprite texture.
+        @param collision       Whether the tile can be collided with or not.
+        @param type            Type of the tile.
+    */
     void add_tile(const unsigned x, const unsigned y, const unsigned layer, const sf::IntRect &_rect, const bool collision, const short type);
+
+    /* @brief Removes a tile.
+    *   @param x               Grid position on the X axis for the removed tile.
+        @param y               Grid position on the Y axis for the removed tile.
+        @param layer           Which tile layer to remove.
+        @param type            Type of the tile. Only tiles with this given type can be removed.
+    */
     void remove_tile(const unsigned x, const unsigned y, const unsigned layer, const short type);
 
     /*
-        Saves the entire tilemap to a text file.
+        @brief Saves the entire tilemap to a text file.
         Format:
         Map parameters:
             ->Max size: X and Y
@@ -35,8 +63,14 @@ public:
 
         Individual Tiles:
             ->Position: X and Y; Layer number; Texture rectangle; collision; tile type;
+
+        @param file_name Name of the save file (Usually "savefile.sav").
     */
     void save_tilemap(const std::string file_name);
+
+    /*@brief Loads the map from a file. If the file is not found, map loading is ignored.
+     * @param file_name Name of the save file (Usually "savefile.sav").
+     */
     void load_tilemap(const std::string file_name);
 
     const sf::Texture *get_tilesheet() const;

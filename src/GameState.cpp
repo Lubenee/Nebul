@@ -19,7 +19,6 @@ void game_state::init_shaders()
 {
     if (!core_shader.loadFromFile("../Shaders/vertex_shader.vert", "../Shaders/fragment_shader.frag"))
         throw("ERROR::GAME_STATE::FAILED TO LOAD SHADERS.\n");
-    std::cout << "Shaders!!!!!\n";
 }
 
 void game_state::init_player_gui()

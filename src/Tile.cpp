@@ -26,7 +26,7 @@ void tile::render(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector
     if (shader)
     {
         shader->setUniform("hasTexture", true);
-        shader->setUniform("lightPos", player_pos);
+        shader->setUniform("light", player_pos);
         target.draw(shape, shader);
     }
     else
