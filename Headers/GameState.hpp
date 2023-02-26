@@ -39,6 +39,8 @@ private:
 
 private:
     sf::View view;
+    sf::Vector2i view_grid_pos;
+
     /* To remove weird texture glitching and make rendering smoother, everything in the game is first drawn on this sort of canvas texture,
     and then gets pasted on the screen all at once.*/
     sf::RenderTexture render_texture;

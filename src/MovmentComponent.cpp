@@ -2,8 +2,8 @@
 
 #include "../Headers/MovmentComponent.hpp"
 
-movment_component::movment_component(sf::Sprite &sprite, const float max_velocity, float _acc, float _dec)
-    : sprite(sprite), max_velocity(max_velocity), acceleration(_acc), deceleration(_dec)
+movment_component::movment_component(sf::Sprite &sprite, const float _max_velocity, float _acc, float _dec)
+    : sprite(sprite), max_velocity(_max_velocity), acceleration(_acc), deceleration(_dec), max_velocity_copy(_max_velocity)
 {
     this->velocity.x = 0;
     this->velocity.y = 0;
@@ -62,11 +62,16 @@ void movment_component::update(const float &dt)
     sprite.move(velocity * dt);
 }
 
-void movment_component::move(const float dir_x, const float dir_y, const float &dt)
+void movment_component::move(const float dir_x, const float dir_y, const float &dt, const float run_value)
 {
     // Accelerating a sprite until it reaches max velocity
-    velocity.x += acceleration * dir_x * dt;
-    velocity.y += acceleration * dir_y * dt;
+    velocity.x += acceleration * dir_x * dt * run_value;
+    velocity.y += acceleration * dir_y * dt * run_value;
+
+    if (run_value != 1)
+        max_velocity = max_velocity_copy + run_value;
+    else
+        max_velocity = max_velocity_copy;
 }
 
 void movment_component::reset_velocity()

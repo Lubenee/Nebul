@@ -11,6 +11,9 @@ class tilemap
 public:
     tilemap(float _grid_size, int width, int height, const std::string texture_file);
 
+    /*@brief Initializes a tilemap with a saved file.*/
+    tilemap(const std::string file_name);
+
     /* @brief Updates world border collision & tile collison with any given entity. */
     void update_collision(entity *entity, const float &dt);
 
@@ -74,6 +77,10 @@ public:
     void load_tilemap(const std::string file_name);
 
     const sf::Texture *get_tilesheet() const;
+
+    const sf::Vector2i get_map_size_tiles() const;
+    const sf::Vector2f get_map_size_pixels() const;
+
     const int get_num_of_layers(const sf::Vector2i mouse_pos_grid, const int layer) const;
 
     ~tilemap();

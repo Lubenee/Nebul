@@ -58,8 +58,7 @@ void game_state::init_pause_menu()
 
 void game_state::init_map()
 {
-    map = new tilemap(state_details->grid_size, 100, 100, "../Assets/tiles/tilesheet3.png");
-    map->load_tilemap("savefile.sav");
+    map = new tilemap("savefile.sav");
 }
 
 void game_state::init_player()
@@ -104,14 +103,20 @@ void game_state::update_input(const float &dt)
 
 void game_state::update_player_input(const float &dt)
 {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["RUN"])))
+        plr->run(true);
+    else
+        plr->run(false);
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_LEFT"])))
-        plr->move(-1.f, 0.f, dt);
+        plr->get_running() ? plr->move(-1.f, 0.f, dt, plr->get_run_speed()) : plr->move(-1.f, 0.f, dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_RIGHT"])))
-        plr->move(1.f, 0.f, dt);
+        plr->get_running() ? plr->move(1.f, 0.f, dt, plr->get_run_speed()) : plr->move(1.f, 0.f, dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_UP"])))
-        plr->move(0.f, -1.f, dt);
+        plr->get_running() ? plr->move(0.f, -1.f, dt, plr->get_run_speed()) : plr->move(0.f, -1.f, dt);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_DOWN"])))
-        plr->move(0.f, 1.f, dt);
+        plr->get_running() ? plr->move(0.f, 1.f, dt, plr->get_run_speed()) : plr->move(0.f, 1.f, dt);
+
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::K) && pressable_button())
         plr->lose_hp(1);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::I) && pressable_button())
@@ -129,8 +134,28 @@ void game_state::update_view(const float &dt)
 {
     /* std::floor is used in order to fix line tearing while rendering. That way the player.pos values are a bit more precise. */
     view.setCenter(
-        std::floor(plr->get_pos().x + (static_cast<float>(mouse_pos_window.x) - static_cast<float>(state_details->gfx_settings->resolution.width / 2)) / 6.f),
-        std::floor(plr->get_pos().y + (static_cast<float>(mouse_pos_window.y) - static_cast<float>(state_details->gfx_settings->resolution.height / 2)) / 6.f));
+        std::floor(plr->get_pos().x + (static_cast<float>(mouse_pos_window.x) - static_cast<float>(state_details->gfx_settings->resolution.width / 2)) / 8.f),
+        std::floor(plr->get_pos().y + (static_cast<float>(mouse_pos_window.y) - static_cast<float>(state_details->gfx_settings->resolution.height / 2)) / 8.f));
+
+    /* Limit the view to the window only. */
+    if (map->get_map_size_pixels().x >= view.getSize().x)
+    {
+        if (view.getCenter().x - view.getSize().x / 2.f < 0.f)
+            view.setCenter(0.f + view.getSize().x / 2.f, view.getCenter().y);
+        else if (view.getCenter().x + view.getSize().x / 2.f >= map->get_map_size_pixels().x)
+            view.setCenter(map->get_map_size_pixels().x - view.getSize().x / 2.f, view.getCenter().y);
+    }
+
+    if (map->get_map_size_pixels().y >= view.getSize().y)
+    {
+        if (view.getCenter().y - view.getSize().y / 2.f < 0.f)
+            view.setCenter(view.getCenter().x, 0.f + view.getSize().y / 2.f);
+        else if (view.getCenter().y + view.getSize().y / 2.f >= map->get_map_size_pixels().y)
+            view.setCenter(view.getCenter().x, map->get_map_size_pixels().y - view.getSize().y / 2.f);
+    }
+
+    view_grid_pos.x = static_cast<int>(view.getCenter().x) / state_details->grid_size;
+    view_grid_pos.y = static_cast<int>(view.getCenter().y) / state_details->grid_size;
 }
 
 void game_state::update_tilemap(const float &dt)
@@ -147,7 +172,7 @@ void game_state::update(const float &dt)
         update_view(dt);
         update_player_input(dt);
         update_tilemap(dt);
-        plr->update(dt);
+        plr->update(dt, mouse_pos_view);
         update_player_gui(dt);
     }
     else if (paused)
@@ -166,7 +191,7 @@ void game_state::render(sf::RenderTarget *target)
     render_texture.setView(view);
 
     map->render(render_texture,
-                plr->get_gridpos(static_cast<int>(state_details->grid_size)),
+                view_grid_pos,
                 &core_shader,
                 plr->get_center(),
                 false);

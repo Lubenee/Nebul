@@ -15,12 +15,12 @@ enum mov_states
 class movment_component
 {
 public:
-    movment_component(sf::Sprite &sprite, const float max_velocity, float _acc, float _dec);
+    movment_component(sf::Sprite &sprite, const float _max_velocity, float _acc, float _dec);
     ~movment_component();
 
     /* Decelerates the sprite and controls the maximum velocity. Moves the sprite.*/
     void update(const float &dt);
-    void move(const float _x, const float _y, const float &dt);
+    void move(const float _x, const float _y, const float &dt, const float run_value = 1);
 
     /* Reset the target's velocity. */
     void reset_velocity();
@@ -35,6 +35,7 @@ private:
     sf::Sprite &sprite;
 
     float max_velocity;
+    const float max_velocity_copy;
     sf::Vector2f velocity;
     float acceleration;
     float deceleration;

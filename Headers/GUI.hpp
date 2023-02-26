@@ -176,8 +176,8 @@ namespace GUI
     * @brief
         Converts a percentage value to pixels relative to the current resolution on the x-axis.
 
-      @param[in]        float percent           The percentage value.
-      @param[out]       const float             The calculated pixel value.
+      @param[in]        percent           The percentage value.
+      @param[out]       float             The calculated pixel value.
     */
   const float p2p_x(const float _percent, const sf::VideoMode &vm);
 
@@ -185,18 +185,18 @@ namespace GUI
   * @brief
       Converts a percentage value to pixels relative to the current resolution on the y-axis.
 
-    @param[in]          float percent           The percentage value.
-    @param[out]         float pixels            Returns the calculated pixel value.
+    @param[in]           percent           The percentage value.
+    @param[out]          float             Returns the calculated pixel value.
   */
   const float p2p_y(const float _percent, const sf::VideoMode &vm);
 
   /*
   * @brief Calculates the character size for text using the current resolution and a constant (100).
 
-      @param[in]        sf::VideoMode& vm       The current videomode of the window (resolution).
-      @param[in]        unsigned modifier       Used to modify the character size in a more custom way.
+      @param[in]        sf::VideoMode& vm     The current videomode of the window (resolution).
+      @param[in]        modifier              Used to modify the character size in a more custom way.
 
-      @param[in]        unsigned            Returns the calculated character size value.
+      @param[in]        unsigned              Returns the calculated character size value.
   */
   const unsigned calc_char_size(const sf::VideoMode &vm, const unsigned modifier = 60);
 } // namespace GUI

@@ -1,6 +1,8 @@
 #ifndef ATTRIBUTE_COMPONENT_H
 #define ATTRIBUTE_COMPONENT_H
 
+#include "Constants.hpp"
+
 struct attribute_component
 {
 public:
@@ -14,29 +16,39 @@ public:
     size_t attribute_points;
 
     /*  Attributes.  */
-    int vitality;
     int strength;
+    int defence;
+    int vitality;
     int dexterity;
     int agility;
+    int endurance;
     int intelligence;
 
     /*  Stats.   */
-    int hp;
+    float hp;
     int hp_max;
+
+    float stamina;
+    int stamina_max;
+
     int damage;
     int damage_min;
     int damage_max;
-
-    int accuracy;
-    int defense;
-    int luck;
 
     /*  Functions.   */
     void update();
     void update_level();
     void update_stats(const bool reset);
     void print() const;
+
+    void lose_hp(const int _hp);
+    void lose_exp(const unsigned _exp);
+
+    void gain_hp(const int _hp);
     void gain_exp(const int _exp);
+
+private:
+    sf::Clock stamina_reg_time;
 };
 
 #endif

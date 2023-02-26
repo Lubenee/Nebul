@@ -7,8 +7,8 @@ player::player(float _x, float _y, sf::Texture &_tex_sheet)
 
     set_pos(_x, _y);
 
-    create_hitbox_component(10.f, 5.f, 44.f, 54.f, sprite);
-    create_movment_component(250.f, 1500.f, 900.f);
+    create_hitbox_component(12.f, 10.f, 44.f, 54.f, sprite);
+    create_movment_component(250.f, 1600.f, 1000.f);
     create_animation_component(_tex_sheet);
     create_attribute_component(1);
 
@@ -24,42 +24,20 @@ player::player(float _x, float _y, sf::Texture &_tex_sheet)
 
 void player::init_variables()
 {
+    weapon_texture.loadFromFile("../Assets/Images/Player/sword.png");
+    weapon_sprite.setTexture(weapon_texture);
+    weapon_sprite.setOrigin(
+        weapon_sprite.getGlobalBounds().width / 2.f,
+        weapon_sprite.getGlobalBounds().height);
+    weapon_sprite.scale(1.5f, 1.5f);
+
+    running = false;
     attacking = false;
+    run_speed = 300.f;
 }
 
 void player::update_animation(const float &dt)
 {
-    if (attacking)
-    {
-        // Set the origin point depending on direction
-        if (sprite.getScale().x > 0.f)
-        // Facing left
-        {
-            sprite.setOrigin(96.f, 0.f);
-        }
-        else
-        // Facing right
-        {
-            sprite.setOrigin(258.f + 96.f, 0.f);
-        }
-
-        // Animate and check for animation end
-        if (ac->play("ATTACK", dt, true))
-        {
-            attacking = false;
-
-            if (sprite.getScale().x > 0.f)
-            // Facing left
-            {
-                sprite.setOrigin(0.f, 0.f);
-            }
-            else
-            // Facing right
-            {
-                sprite.setOrigin(258.f, 0.f);
-            }
-        }
-    }
 
     if (mc->get_state(IDLE))
         ac->play("IDLE", dt);
@@ -87,7 +65,16 @@ void player::update_attack()
     //     attacking = true;
 }
 
-void player::update(const float &dt)
+void player::update_stamina()
+{
+    if (running && run_time.getElapsedTime().asMilliseconds() >= GLOBAL_TICK_TIME_MILLISECONDS)
+    {
+        at_c->stamina -= 0.7f;
+        run_time.restart();
+    }
+}
+
+void player::update(const float &dt, const sf::Vector2f &mouse_pos_view)
 {
     // TODO Debug print
     // at_c->print();
@@ -96,6 +83,18 @@ void player::update(const float &dt)
     hc->update();
     update_attack();
     update_animation(dt);
+    update_stamina();
+    at_c->update();
+
+    // Update visual weapon
+    weapon_sprite.setPosition(get_center());
+    float dx = mouse_pos_view.x - weapon_sprite.getPosition().x;
+    float dy = mouse_pos_view.y - weapon_sprite.getPosition().y;
+
+    const float Pi = 3.14159265;
+    float deg = atan2(dy, dx) * 180 / Pi;
+
+    weapon_sprite.setRotation(deg + 90.f);
 }
 
 void player::render(sf::RenderTarget &target, sf::Shader *shader)
@@ -105,40 +104,53 @@ void player::render(sf::RenderTarget &target, sf::Shader *shader)
         shader->setUniform("hasTexture", true);
         shader->setUniform("light", get_center());
         target.draw(sprite, shader);
+        target.draw(weapon_sprite, shader);
     }
     else
     {
         target.draw(sprite);
+        target.draw(weapon_sprite);
     }
 }
 
 void player::lose_hp(const int hp)
 {
-    at_c->hp -= hp;
-    if (at_c->hp < 0)
-        at_c->hp = 0;
+    at_c->lose_hp(hp);
 }
 void player::lose_exp(const unsigned exp)
 {
-    at_c->exp -= exp;
-    if (at_c->exp < 0)
-        at_c->exp = 0;
+    at_c->lose_exp(exp);
 }
 
 void player::gain_hp(const int hp)
 {
-    at_c->hp += hp;
-    if (at_c->hp > at_c->hp_max)
-        at_c->hp = at_c->hp_max;
+    at_c->gain_hp(hp);
 }
 void player::gain_exp(const unsigned exp)
 {
     at_c->gain_exp(exp);
 }
 
+void player::run(const bool state)
+{
+    running = state;
+    if (running && at_c->stamina <= 0.3)
+        running = false;
+}
+
 attribute_component *player::get_attribute_component()
 {
     return this->at_c;
+}
+
+const bool player::get_running() const
+{
+    return running;
+}
+
+const float &player::get_run_speed() const
+{
+    return this->run_speed;
 }
 
 player::~player()

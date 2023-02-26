@@ -40,6 +40,22 @@ tilemap::tilemap(float _grid_size, int width, int height, const std::string text
     layer = 0;
 }
 
+tilemap::tilemap(const std::string file_name)
+{
+    from_x = 0;
+    to_x = 0;
+    from_y = 0;
+    to_y = 0;
+    layer = 0;
+
+    collision_box.setSize(sf::Vector2f(grid_sizef, grid_sizef));
+    collision_box.setFillColor(sf::Color(255, 0, 0, 80));
+    collision_box.setOutlineColor(sf::Color::Red);
+    collision_box.setOutlineThickness(-1.f);
+
+    load_tilemap(file_name);
+}
+
 void tilemap::init_textures()
 {
     if (!tile_sheet.loadFromFile("../Assets/tiles/tilesheet1.png"))
@@ -67,7 +83,7 @@ void tilemap::update_collision(entity *entity, const float &dt)
     if (from_y < 0)
         from_y = 0;
 
-    to_y = entity->get_gridpos(grid_sizeu).y + 3;
+    to_y = entity->get_gridpos(grid_sizeu).y + 4;
     if (to_y > map_size_tiles.y)
         to_y = map_size_tiles.y;
 
@@ -154,13 +170,13 @@ void tilemap::update()
 {
 }
 
-void tilemap::render_deferred(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector2f player_pos)
+void tilemap::render_deferred(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector2f light_src)
 {
     while (!deferred_render_stack.empty())
     {
         if (shader)
         {
-            deferred_render_stack.top()->render(target, shader, player_pos);
+            deferred_render_stack.top()->render(target, shader, light_src);
         }
         else
         {
@@ -171,7 +187,7 @@ void tilemap::render_deferred(sf::RenderTarget &target, sf::Shader *shader, cons
 }
 
 void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position,
-                     sf::Shader *shader, const sf::Vector2f player_pos,
+                     sf::Shader *shader, const sf::Vector2f light_src,
                      const bool show_collision)
 {
     from_x = grid_position.x - 15;
@@ -186,7 +202,7 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
     if (from_y < 0)
         from_y = 0;
 
-    to_y = grid_position.y + 10;
+    to_y = grid_position.y + 9;
     if (to_y > map_size_tiles.y)
         to_y = map_size_tiles.y;
 
@@ -201,7 +217,7 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
                     {
                         if (shader)
                         {
-                            map[x][y][layer][k]->render(target, shader, player_pos);
+                            map[x][y][layer][k]->render(target, shader, light_src);
                         }
                         else
                         {
@@ -297,6 +313,8 @@ void tilemap::load_tilemap(const std::string save_file)
     this->grid_sizeu = grid_size;
     this->map_size_tiles.x = size.x;
     this->map_size_tiles.y = size.y;
+    this->map_size_pixels.x = static_cast<float>(size.x * grid_size);
+    this->map_size_pixels.y = static_cast<float>(size.y * grid_size);
     this->layers = layers;
     this->texture_file = texture;
     if (!tile_sheet.loadFromFile(this->texture_file))
@@ -331,7 +349,6 @@ void tilemap::clear_map()
 {
     if (!map.empty())
     {
-
         for (size_t x = 0; x < map.size(); ++x)
         {
             for (size_t y = 0; y < map[x].size(); ++y)
@@ -356,6 +373,16 @@ void tilemap::clear_map()
 const sf::Texture *tilemap::get_tilesheet() const
 {
     return &tile_sheet;
+}
+
+const sf::Vector2i tilemap::get_map_size_tiles() const
+{
+    return map_size_tiles;
+}
+
+const sf::Vector2f tilemap::get_map_size_pixels() const
+{
+    return map_size_pixels;
 }
 
 const int tilemap::get_num_of_layers(const sf::Vector2i mouse_pos_grid, const int layer) const

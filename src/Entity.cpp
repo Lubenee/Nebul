@@ -36,15 +36,15 @@ void entity::create_attribute_component(const int _level)
     at_c = new attribute_component(_level);
 }
 
-void entity::move(const float _x, const float _y, const float &dt)
+void entity::move(const float _x, const float _y, const float &dt, const float run_value)
 {
     if (mc)
-        mc->move(_x, _y, dt);
+        mc->move(_x, _y, dt, run_value);
     else
         sprite.move(_x, _y);
 }
 
-void entity::update(const float &dt)
+void entity::update(const float &dt, const sf::Vector2f &mouse_pos_view)
 {
     if (mc)
         mc->update(dt);
