@@ -103,7 +103,7 @@ void game_state::update_input(const float &dt)
 
 void game_state::update_player_input(const float &dt)
 {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["RUN"])))
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["RUN"])) && plr->get_regenerated_stamina())
         plr->run(true);
     else
         plr->run(false);

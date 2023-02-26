@@ -18,6 +18,8 @@ attribute_component::attribute_component(int _level)
 
     update_stats(true);
     update_level();
+
+    regenerated_stamina = true;
 }
 
 /*  Functions.  */
@@ -39,9 +41,17 @@ void attribute_component::update()
 {
     if (stamina < stamina_max && stamina_reg_time.getElapsedTime().asMilliseconds() >= GLOBAL_TICK_TIME_MILLISECONDS)
     {
-        stamina += 0.2f;
+        stamina += 0.3f;
         stamina_reg_time.restart();
     }
+    if (stamina <= 0.2f)
+        stamina = 0.f;
+
+    if (stamina == 0.f)
+        regenerated_stamina = false;
+
+    if (static_cast<int>(stamina) == stamina_max)
+        regenerated_stamina = true;
 }
 
 void attribute_component::update_level()

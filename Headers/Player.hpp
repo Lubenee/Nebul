@@ -26,6 +26,7 @@ public:
     attribute_component *get_attribute_component();
     const bool get_running() const;
     const float &get_run_speed() const;
+    const bool get_regenerated_stamina() const;
 
     virtual ~player();
 

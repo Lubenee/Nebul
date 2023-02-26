@@ -47,6 +47,8 @@ public:
     void gain_hp(const int _hp);
     void gain_exp(const int _exp);
 
+    bool regenerated_stamina;
+
 private:
     sf::Clock stamina_reg_time;
 };

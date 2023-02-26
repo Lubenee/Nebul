@@ -153,6 +153,11 @@ const float &player::get_run_speed() const
     return this->run_speed;
 }
 
+const bool player::get_regenerated_stamina() const
+{
+    return at_c->regenerated_stamina;
+}
+
 player::~player()
 {
 }
