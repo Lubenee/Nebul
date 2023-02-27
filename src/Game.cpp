@@ -10,6 +10,8 @@ game::game()
     init_keys();
     init_state_data();
     init_states();
+
+    time_per_frame = sf::seconds(1.f / 60.f);
 }
 
 /* Initializer functions */
@@ -63,7 +65,8 @@ void game::update()
         if (window->hasFocus())
         {
 
-            states.top()->update(dt);
+            states.top()->update(time_per_frame.asSeconds());
+
             if (states.top()->get_quit())
             {
                 states.top()->end_state();
@@ -79,16 +82,29 @@ void game::update()
     }
 }
 
-void game::update_sfml_events()
+void game::process_events()
 {
     while (window->pollEvent(event))
         if (event.type == sf::Event::Closed)
             window->close();
 }
 
-void game::update_delta_time()
+void game::run()
 {
-    dt = dt_clock.restart().asSeconds();
+    sf::Clock clock;
+    sf::Time time_since_last_update = sf::Time::Zero;
+    while (window->isOpen())
+    {
+        process_events();
+        time_since_last_update += clock.restart();
+        while (time_since_last_update > time_per_frame)
+        {
+            time_since_last_update -= time_per_frame;
+            process_events();
+            update();
+        }
+        render();
+    }
 }
 
 /* Render */
@@ -100,17 +116,6 @@ void game::render()
         states.top()->render(window);
 
     window->display();
-}
-
-void game::run()
-{
-    while (window->isOpen())
-    {
-        update_delta_time();
-        update_sfml_events();
-        update();
-        render();
-    }
 }
 
 void game::exit_window()

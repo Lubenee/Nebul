@@ -51,9 +51,9 @@ public:
      *     @param x           New X axis position.
      *     @param Y           New Y axis position.
      *     @param delta_time  Needed for calculations.
-     *     @param run_value   The entity's max velocity is multiplied by this
+     *     @param run_value   The entity's max velocity is multiplied by this.
      */
-    virtual void move(const float _x, const float _y, const float &dt, const float run_value = 1);
+    virtual void move(const float _x, const float _y, const float &dt, const float run_value = 1.f);
 
     /*  @brief Returns the entity's position.  */
     virtual const sf::Vector2f &get_pos() const;

@@ -69,8 +69,6 @@ void tilemap::update_collision(entity *entity, const float &dt)
     // Window collision
     update_worldborder_collision(entity, dt);
 
-    layer = 0;
-
     from_x = entity->get_gridpos(grid_sizeu).x - 1;
     if (from_x < 0)
         from_x = 0;
@@ -95,11 +93,12 @@ void tilemap::update_collision(entity *entity, const float &dt)
             {
 
                 sf::FloatRect next_pos = entity->get_next_pos(dt);
+
                 if (map[x][y][layer][k]->get_collision() && map[x][y][layer][k]->intersects(next_pos))
                 {
                     sf::FloatRect player_bounds = entity->get_global_bounds();
                     sf::FloatRect wall_bounds = map[x][y][layer][k]->get_global_bounds();
-                    /* Bottom collision. */
+                    /* Bottom collision relative to the player. */
                     if (player_bounds.top < wall_bounds.top &&
                         player_bounds.top + player_bounds.height < wall_bounds.top + wall_bounds.width &&
                         player_bounds.left < wall_bounds.left + wall_bounds.width &&
@@ -108,7 +107,7 @@ void tilemap::update_collision(entity *entity, const float &dt)
                         entity->reset_velocityY();
                         entity->set_pos(player_bounds.left, wall_bounds.top - player_bounds.height);
                     }
-                    /* Top collision. */
+                    /* Top collision relative to the player . */
                     else if (player_bounds.top > wall_bounds.top &&
                              player_bounds.top + player_bounds.height > wall_bounds.top + wall_bounds.width &&
                              player_bounds.left < wall_bounds.left + wall_bounds.width &&
@@ -117,7 +116,7 @@ void tilemap::update_collision(entity *entity, const float &dt)
                         entity->reset_velocityY();
                         entity->set_pos(player_bounds.left, wall_bounds.top + player_bounds.height + 10.f);
                     }
-                    /* Right collision. */
+                    /* Right collision relative to the player.*/
                     if (player_bounds.left < wall_bounds.left &&
                         player_bounds.left + player_bounds.width < wall_bounds.left + wall_bounds.width &&
                         player_bounds.top < wall_bounds.top + wall_bounds.height &&
@@ -126,7 +125,7 @@ void tilemap::update_collision(entity *entity, const float &dt)
                         entity->reset_velocityX();
                         entity->set_pos(wall_bounds.left - player_bounds.width, player_bounds.top);
                     }
-                    /* Left collision. */
+                    /* Left collision relative to the player.*/
                     else if (player_bounds.left > wall_bounds.left &&
                              player_bounds.left + player_bounds.width > wall_bounds.left + wall_bounds.width &&
                              player_bounds.top < wall_bounds.top + wall_bounds.height &&
@@ -230,7 +229,16 @@ void tilemap::render(sf::RenderTarget &target, const sf::Vector2i &grid_position
                         if (map[x][y][layer][k]->get_collision())
                         {
                             collision_box.setPosition(map[x][y][layer][k]->get_pos()); // TODO remove later.
-                            target.draw(collision_box);
+                            if (shader)
+                            {
+                                shader->setUniform("hasTexture", true);
+                                shader->setUniform("light", light_src);
+                                target.draw(collision_box, shader);
+                            }
+                            else
+                            {
+                                target.draw(collision_box);
+                            }
                         }
                     }
                 }

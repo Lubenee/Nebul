@@ -19,7 +19,7 @@ void movment_component::update(const float &dt)
             velocity.x = max_velocity;
 
         // Deceleration x positive
-        velocity.x -= deceleration * dt;
+        velocity.x -= deceleration;
         if (velocity.x < 0.f)
             velocity.x = 0.f;
     }
@@ -31,18 +31,17 @@ void movment_component::update(const float &dt)
             velocity.x = -max_velocity;
 
         // Deceleration x negative
-        velocity.x += deceleration * dt;
+        velocity.x += deceleration;
         if (velocity.x > 0.f)
             velocity.x = 0.f;
     }
-
     // Check for positive y
     if (velocity.y > 0.f)
     {
         if (velocity.y > max_velocity)
             velocity.y = max_velocity;
 
-        velocity.y -= deceleration * dt;
+        velocity.y -= deceleration;
         if (velocity.y < 0.f)
             velocity.y = 0.f;
     }
@@ -54,7 +53,7 @@ void movment_component::update(const float &dt)
             velocity.y = -max_velocity;
 
         // Deceleration y negative
-        velocity.y += deceleration * dt;
+        velocity.y += deceleration;
         if (velocity.y > 0.f)
             velocity.y = 0.f;
     }
@@ -65,11 +64,11 @@ void movment_component::update(const float &dt)
 void movment_component::move(const float dir_x, const float dir_y, const float &dt, const float run_value)
 {
     // Accelerating a sprite until it reaches max velocity
-    velocity.x += acceleration * dir_x * dt * run_value;
-    velocity.y += acceleration * dir_y * dt * run_value;
+    velocity.x += acceleration * dir_x * run_value;
+    velocity.y += acceleration * dir_y * run_value;
 
     if (run_value != 1)
-        max_velocity = max_velocity_copy + run_value;
+        max_velocity = max_velocity_copy + run_value * 50;
     else
         max_velocity = max_velocity_copy;
 }

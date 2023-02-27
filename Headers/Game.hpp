@@ -18,7 +18,7 @@ public:
 
 private:
   /*Update*/
-  void update_sfml_events();
+  void process_events();
   void update_delta_time();
   void update();
 
@@ -46,8 +46,7 @@ private:
   sf::Event event;
 
   /* Delta time */
-  float dt;
-  sf::Clock dt_clock;
+  sf::Time time_per_frame;
 
   /* Stack */
   std::stack<state *> states;

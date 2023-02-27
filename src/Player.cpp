@@ -8,7 +8,7 @@ player::player(float _x, float _y, sf::Texture &_tex_sheet)
     set_pos(_x, _y);
 
     create_hitbox_component(12.f, 10.f, 44.f, 54.f, sprite);
-    create_movment_component(250.f, 1600.f, 1000.f);
+    create_movment_component(200.f, 80.f, 14.f);
     create_animation_component(_tex_sheet);
     create_attribute_component(1);
 
@@ -33,7 +33,7 @@ void player::init_variables()
 
     running = false;
     attacking = false;
-    run_speed = 150.f;
+    run_speed = 2.5f;
 }
 
 void player::update_animation(const float &dt)
@@ -105,11 +105,13 @@ void player::render(sf::RenderTarget &target, sf::Shader *shader)
         shader->setUniform("light", get_center());
         target.draw(sprite, shader);
         target.draw(weapon_sprite, shader);
+        hc->render(target);
     }
     else
     {
         target.draw(sprite);
         target.draw(weapon_sprite);
+        hc->render(target);
     }
 }
 

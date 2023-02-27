@@ -61,8 +61,8 @@ const sf::Vector2f &hitbox_component::get_pos() const
 
 const sf::FloatRect hitbox_component::get_next_pos(const sf::Vector2f &_vel)
 {
-    next_pos.left = hitbox.getPosition().x + _vel.x;
-    next_pos.top = hitbox.getPosition().y + _vel.y;
+    next_pos.left = (hitbox.getPosition().x + _vel.x);
+    next_pos.top = (hitbox.getPosition().y + _vel.y);
     return next_pos;
 }
 

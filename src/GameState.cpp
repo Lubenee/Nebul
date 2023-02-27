@@ -160,7 +160,6 @@ void game_state::update_view(const float &dt)
 
 void game_state::update_tilemap(const float &dt)
 {
-    map->update();
     map->update_collision(plr, dt);
 }
 
@@ -194,7 +193,7 @@ void game_state::render(sf::RenderTarget *target)
                 view_grid_pos,
                 &core_shader,
                 plr->get_center(),
-                false);
+                true);
     plr->render(render_texture, &core_shader);
 
     map->render_deferred(render_texture, &core_shader, plr->get_center());
