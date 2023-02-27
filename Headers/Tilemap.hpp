@@ -76,11 +76,15 @@ public:
      */
     void load_tilemap(const std::string file_name);
 
+    /*  @brief Returns the tilemap's tilesheet. */
     const sf::Texture *get_tilesheet() const;
 
+    /*  @brief Returns the entire map's size in tiles. */
     const sf::Vector2i get_map_size_tiles() const;
+    /*  @brief Returns the entire map's size in pixels. */
     const sf::Vector2f get_map_size_pixels() const;
 
+    /*  @brief Returns the given tile's number of layers. */
     const int get_num_of_layers(const sf::Vector2i mouse_pos_grid, const int layer) const;
 
     ~tilemap();
@@ -90,6 +94,7 @@ private:
 
     void update_worldborder_collision(entity *entity, const float &dt);
 
+    /*  @brief Acts like a destructor. Used when loading maps from files. */
     void clear_map();
 
 private:

@@ -35,8 +35,8 @@ void player_gui::init_hp_bar()
     hp_bar_inner.setPosition(hp_bar_back.getPosition());
 
     hp_bar_text.setFont(font);
-    hp_bar_text.setCharacterSize(GUI::calc_char_size(vm, 150));
-    hp_bar_text.setPosition(hp_bar_inner.getPosition().x + GUI::p2p_x(0.5f, vm),
+    hp_bar_text.setCharacterSize(GUI::calc_char_size(vm, 160));
+    hp_bar_text.setPosition(hp_bar_inner.getPosition().x + GUI::p2p_x(0.4f, vm),
                             hp_bar_inner.getPosition().y + GUI::p2p_y(1.f, vm));
 }
 
@@ -58,9 +58,9 @@ void player_gui::init_exp_bar()
     exp_bar_inner.setPosition(exp_bar_back.getPosition());
 
     exp_bar_text.setFont(font);
-    exp_bar_text.setCharacterSize(GUI::calc_char_size(vm, 150));
+    exp_bar_text.setCharacterSize(GUI::calc_char_size(vm, 160));
     exp_bar_text.setPosition(exp_bar_inner.getPosition().x + GUI::p2p_x(0.53f, vm),
-                             exp_bar_inner.getPosition().y + GUI::p2p_y(0.15f, vm));
+                             exp_bar_inner.getPosition().y + GUI::p2p_y(0.16f, vm));
 }
 
 void player_gui::init_stamina_bar()
@@ -81,9 +81,9 @@ void player_gui::init_stamina_bar()
     stamina_bar_inner.setPosition(stamina_bar_back.getPosition());
 
     stamina_bar_text.setFont(font);
-    stamina_bar_text.setCharacterSize(GUI::calc_char_size(vm, 150));
+    stamina_bar_text.setCharacterSize(GUI::calc_char_size(vm, 160));
     stamina_bar_text.setPosition(stamina_bar_inner.getPosition().x + GUI::p2p_x(0.53f, vm),
-                                 stamina_bar_inner.getPosition().y + GUI::p2p_y(0.15f, vm));
+                                 stamina_bar_inner.getPosition().y + GUI::p2p_y(0.2f, vm));
 }
 
 void player_gui::init_level_bar()

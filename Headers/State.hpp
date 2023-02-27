@@ -16,18 +16,21 @@ public:
     virtual void update(const float &dt) = 0;
     virtual void render(sf::RenderTarget *target = nullptr) = 0;
 
+    /* @brief Tells us if we should quit the current state. */
     const bool &get_quit() const;
-    const bool pressable_button();
-    const bool pressable_button_short();
 
+    /* @brief Pauses the current state. */
     void set_pause(bool pause_state);
 
-    void end_state();
+        void end_state();
     virtual ~state();
 
 protected:
     virtual void init_keybinds() = 0;
     virtual void update_mouse_pos(const sf::View *view = nullptr);
+
+    const bool pressable_button();
+    const bool pressable_button_short();
 
 protected:
     /* Mouse pos */
@@ -60,7 +63,7 @@ protected:
     float grid_size;
 };
 
-/* Used to more efficiently send data between each state. */
+/* @brief Used to more efficiently send data between each state. */
 struct state_data
 {
 public:

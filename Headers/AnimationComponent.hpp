@@ -4,21 +4,22 @@
 class animation_component
 {
 public:
-    /*Forces a sprite and a texture upon creating the class, because creating an animation without a sprite and a texture is pointless*/
+    /* @brief Forces a sprite and a texture upon creating the class, because creating an animation without a sprite and a texture is pointless*/
     animation_component(sf::Sprite &_sprite, sf::Texture &_tex);
 
-    /*Plays the animation at the given key.*/
+    /* @brief Plays the animation at the given key.*/
     const bool &play(const std::string key, const float &dt, const bool priority = false);
 
-    /*Changes the animation speed with a dynamic variable. If the entity's velocity is passed as a modifier,
+    /* @brief Changes the animation speed with a dynamic variable. If the entity's velocity is passed as a modifier,
     the animation speeds up as the entity's velocity increases.*/
     const bool &play(const std::string key, const float &dt, const float &modifier, const float &modifier_max, const bool priority = false);
 
-    /*Each animation needs a name, a timer (how fast the animation will run),
+    /* @brief Each animation needs a name, a timer (how fast the animation will run),
     a rectangle for each individual 'image', and the number of horizontal and vertical frames
     it needs.*/
     void add_animation(const std::string key, float animation_timer, int start_frame_x, int start_frame_y, int frames_x, int frames_y, int width, int height);
 
+    /* @brief Returns true if a priority animation is done playing. */
     bool &is_done(const std::string key);
 
     ~animation_component();

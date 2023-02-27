@@ -6,10 +6,6 @@ class settings_state : public state
 {
 public:
     settings_state(state_data *_state_data);
-    void init_keybinds();
-    void init_fonts();
-    void init_background();
-    void init_gui();
 
     /*
      *   @brief Clears the GUI elements, re-initializing the GUI to retain element positions when switching between resolutions.
@@ -25,7 +21,9 @@ public:
         this timer checks if enough time has passed after selecting something
         from the drop menu.
     */
+
     void update_collision_timer();
+
     bool valid_button_collision();
 
     /* @brief Gives different buttons' functionality. */
@@ -40,6 +38,12 @@ public:
     virtual ~settings_state();
 
 private:
+    void init_keybinds();
+    void init_fonts();
+    void init_background();
+    void init_gui();
+
+private:
     sf::RectangleShape background;
     sf::Texture background_texture;
     sf::Font font;
@@ -48,7 +52,7 @@ private:
     std::map<std::string, GUI::button *> buttons;
     std::map<std::string, GUI::drop_down_box *> drop_lists;
 
-    /* In order to avoid clicking on a drop menu button and then
+    /* @brief In order to avoid clicking on a drop menu button and then
         accidentally activating some regular button behind it,
         this timer checks if enough time has passed after selecting something
         from the drop menu.

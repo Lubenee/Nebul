@@ -18,17 +18,22 @@ public:
     movment_component(sf::Sprite &sprite, const float _max_velocity, float _acc, float _dec);
     ~movment_component();
 
-    /* Decelerates the sprite and controls the maximum velocity. Moves the sprite.*/
+    /* @brief Decelerates the sprite and controls the maximum velocity. Moves the sprite.*/
     void update(const float &dt);
     void move(const float _x, const float _y, const float &dt, const float run_value = 1);
 
-    /* Reset the target's velocity. */
+    /* @brief Reset the target's velocity. */
     void reset_velocity();
+    /* @brief Reset the target's X velocity. */
     void reset_velocityX();
+    /* @brief Reset the target's Y velocity. */
     void reset_velocityY();
 
+    /* @brief Returns in what state the entity is in. (Idle, moving up, down, etc.)*/
     const bool get_state(const short unsigned state) const;
+    /* @brief Returns the velocity. */
     sf::Vector2f &get_velocity();
+    /* @brief Retuns the maximum velocity. */
     const float &get_max_velocity() const;
 
 private:

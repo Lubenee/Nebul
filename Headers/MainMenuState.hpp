@@ -12,6 +12,16 @@ class main_menu_state : public state
 {
 public:
     main_menu_state(state_data *state_data);
+
+    /* @brief Updates the main menu state events. */
+    void update(const float &dt);
+
+    /* @brief Renders the main menu state events. */
+    void render(sf::RenderTarget *target = nullptr);
+
+    virtual ~main_menu_state();
+
+private:
     void init_keybinds();
     void init_fonts();
     void init_gui();
@@ -22,12 +32,8 @@ public:
     void update_input(const float &dt);
     void update_buttons();
     void button_handler();
-    void update(const float &dt);
 
     void render_buttons(sf::RenderTarget &target);
-    void render(sf::RenderTarget *target = nullptr);
-
-    virtual ~main_menu_state();
 
 private:
     sf::RectangleShape background;

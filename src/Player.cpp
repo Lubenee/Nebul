@@ -33,7 +33,7 @@ void player::init_variables()
 
     running = false;
     attacking = false;
-    run_speed = 300.f;
+    run_speed = 150.f;
 }
 
 void player::update_animation(const float &dt)

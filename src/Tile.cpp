@@ -21,12 +21,12 @@ tile::tile(size_t x, size_t y, float grid_size,
 
 void tile::update() {}
 
-void tile::render(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector2f player_pos)
+void tile::render(sf::RenderTarget &target, sf::Shader *shader, const sf::Vector2f light_src)
 {
     if (shader)
     {
         shader->setUniform("hasTexture", true);
-        shader->setUniform("light", player_pos);
+        shader->setUniform("light", light_src);
         target.draw(shape, shader);
     }
     else
