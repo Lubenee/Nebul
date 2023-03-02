@@ -1,0 +1,4 @@
+Headers/pch.h.gch
+.DS_Store
+src/*.o
+.vscode
