@@ -6,7 +6,6 @@ class settings_state : public state
 {
 public:
     settings_state(state_data *_state_data);
-
     /*
      *   @brief Clears the GUI elements, re-initializing the GUI to retain element positions when switching between resolutions.
      */
@@ -14,23 +13,21 @@ public:
 
     /* @brief Renders any GUI related compoments that the class has.*/
     void update_gui();
-    void update_input(const float &dt);
 
     /*  @brief In order to avoid clicking on a drop menu button and then
         accidentally activating some regular button behind it,
         this timer checks if enough time has passed after selecting something
         from the drop menu.
     */
-
     void update_collision_timer();
 
     bool valid_button_collision();
 
     /* @brief Gives different buttons' functionality. */
     void button_handler();
-    void update(const float &dt);
+    void update(const float &dt) override;
 
-    void render(sf::RenderTarget *target = nullptr);
+    void render(sf::RenderTarget *target = nullptr) override;
 
     /* @brief Renders any GUI related compoments that the class has.*/
     void render_gui(sf::RenderTarget &target);
@@ -48,9 +45,7 @@ private:
     sf::Texture background_texture;
     sf::Font font;
 
-    GUI::check_box *check;
-    std::map<std::string, GUI::button *> buttons;
-    std::map<std::string, GUI::drop_down_box *> drop_lists;
+    std::map<std::string, GUI::pressable *> buttons;
 
     /* @brief In order to avoid clicking on a drop menu button and then
         accidentally activating some regular button behind it,

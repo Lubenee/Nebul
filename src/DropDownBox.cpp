@@ -35,7 +35,7 @@ drop_down_box::drop_down_box(float x, float y, float width, float height,
 void drop_down_box::button_handler()
 {
   // Show and hide the list
-  if (active_elem->pressed() && pt.pressable_button())
+  if (active_elem->pressed() && this->is_pressable())
     show_menu = show_menu ? false : true;
 }
 
@@ -49,7 +49,7 @@ void drop_down_box::update(const sf::Vector2i &mouse_pos)
     {
       button->update(mouse_pos);
 
-      if (button->pressed() && pt.pressable_button())
+      if (button->pressed() && this->is_pressable())
       {
         show_menu = false;
         active_elem->set_text(button->get_text());

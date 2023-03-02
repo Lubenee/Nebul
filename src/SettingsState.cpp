@@ -7,10 +7,6 @@ settings_state::settings_state(state_data *_state_data) : state(_state_data)
   init_fonts();
   init_background();
   init_gui();
-  check = new GUI::check_box(400.f, 210.f, 50, 50,
-                             sf::Color(250, 50, 100, 150),
-                             sf::Color(50, 150, 50, 50),
-                             sf::Color(50, 250, 100, 150));
 }
 
 void settings_state::init_gui()
@@ -48,10 +44,15 @@ void settings_state::init_gui()
       current_resolution_index = i;
   }
 
-  drop_lists["RESOLUTION"] = new GUI::drop_down_box(
+  buttons["RESOLUTION"] = new GUI::drop_down_box(
       GUI::p2p_x(50.f, vm), GUI::p2p_y(24.f, vm),
       GUI::p2p_x(22.f, vm), GUI::p2p_x(5.5f, vm),
       font, list, current_resolution_index);
+
+  buttons["RADIO_BUTTON"] = new GUI::check_box(400.f, 210.f, 50, 50,
+                                               sf::Color(250, 50, 100, 150),
+                                               sf::Color(50, 150, 50, 50),
+                                               sf::Color(50, 250, 100, 150));
 
   // Text init
   options_text.setFont(font);
@@ -103,29 +104,21 @@ void settings_state::reset_gui()
     delete i.second;
   buttons.clear();
 
-  for (auto &i : drop_lists)
-    delete i.second;
-  drop_lists.clear();
-
   init_gui();
 }
 
 void settings_state::update_gui()
 {
-  if (!drop_lists["RESOLUTION"]->get_active())
+  if (!buttons["RESOLUTION"]->get_active())
     for (auto &i : buttons)
       i.second->update(mouse_pos_window);
-  for (auto &i : drop_lists)
-    i.second->update(mouse_pos_window);
 }
 
 void settings_state::update_collision_timer()
 {
-  if (drop_lists["RESOLUTION"]->get_active())
+  if (buttons["RESOLUTION"]->get_active())
     button_collision_timer.restart();
 }
-
-void settings_state::update_input(const float &dt) { update_mouse_pos(); }
 
 void settings_state::button_handler()
 {
@@ -135,14 +128,14 @@ void settings_state::button_handler()
   else if (buttons["APPLY"]->pressed() && valid_button_collision())
   {
     if (state_details->gfx_settings->resolution.width !=
-            vms[drop_lists["RESOLUTION"]->get_active_elem_id()].width &&
+            vms[buttons["RESOLUTION"]->get_active_elem_id()].width &&
         state_details->gfx_settings->resolution.height !=
-            vms[drop_lists["RESOLUTION"]->get_active_elem_id()].height)
+            vms[buttons["RESOLUTION"]->get_active_elem_id()].height)
     {
 
       state_details->gfx_settings->resolution =
-          vms[drop_lists["RESOLUTION"]->get_active_elem_id()];
-      if (check->get_active())
+          vms[buttons["RESOLUTION"]->get_active_elem_id()];
+      if (buttons["RADIO_BUTTON"]->get_active())
       {
         window->create(state_details->gfx_settings->resolution,
                        state_details->gfx_settings->title, sf::Style::Fullscreen,
@@ -159,15 +152,15 @@ void settings_state::button_handler()
       reset_gui();
     }
   }
+  buttons["RADIO_BUTTON"]->update(mouse_pos_window);
 }
 
 void settings_state::update(const float &dt)
 {
   update_collision_timer();
-  update_input(dt);
+  update_mouse_pos();
   update_gui();
   button_handler();
-  check->update(mouse_pos_view);
 }
 
 void settings_state::render_gui(sf::RenderTarget &target)
@@ -175,11 +168,6 @@ void settings_state::render_gui(sf::RenderTarget &target)
 
   for (auto &i : buttons)
     i.second->render(target);
-
-  for (auto &i : drop_lists)
-    i.second->render(target);
-
-  check->render(target);
 
   target.draw(options_text);
 }
@@ -211,9 +199,4 @@ settings_state::~settings_state()
 {
   for (auto &i : buttons)
     delete i.second;
-
-  for (auto &i : drop_lists)
-    delete i.second;
-
-  delete check;
 }

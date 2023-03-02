@@ -16,13 +16,13 @@ check_box::check_box(float x, float y,
     active = false;
 }
 
-void check_box::update(const sf::Vector2f mouse_pos)
+void check_box::update(const sf::Vector2i &mouse_pos)
 {
     button_state = bs::idle;
-    if (shape.getGlobalBounds().contains(mouse_pos))
+    if (shape.getGlobalBounds().contains(static_cast<sf::Vector2f>(mouse_pos)))
     {
         button_state = bs::hovered;
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && pt.pressable_button())
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && this->is_pressable())
             active = active == true ? false : true;
     }
 

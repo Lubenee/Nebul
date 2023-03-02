@@ -196,11 +196,11 @@ void editor_state::update_pause_menu()
 
 void editor_state::button_handler()
 {
-    if (p_menu->is_button_pressed("QUIT") && pt.pressable_button())
+    if (p_menu->is_button_pressed("QUIT") && pressable_button())
         end_state();
-    else if (p_menu->is_button_pressed("SAVE") && pt.pressable_button())
+    else if (p_menu->is_button_pressed("SAVE") && pressable_button())
         map->save_tilemap("savefile.sav");
-    else if (p_menu->is_button_pressed("LOAD") && pt.pressable_button())
+    else if (p_menu->is_button_pressed("LOAD") && pressable_button())
         map->load_tilemap("savefile.sav");
 }
 

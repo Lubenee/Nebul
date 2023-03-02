@@ -12,29 +12,27 @@ enum bs
 namespace GUI
 {
 
-  class max_press_time
+  class pressable
   {
   public:
-    max_press_time() = default;
+    pressable();
 
-    const bool pressable_button()
-    {
-      if (key_timer.getElapsedTime().asMilliseconds() >
-          key_time_max_miliseconds)
-      {
-        key_timer.restart();
-        return true;
-      }
+    virtual void update(const sf::Vector2i &mouse_pos) = 0;
+    virtual void render(sf::RenderTarget &target) = 0;
 
-      return false;
-    }
+    /*
+     *   @brief Components aren't pressable in too short periods of time.
+     *     @retval bool Returns whether or not a certain cooldown has passed after pressing a component.
+     */
+    virtual const bool is_pressable();
+    virtual ~pressable();
 
   private:
     static const sf::Int32 key_time_max_miliseconds = 330;
     sf::Clock key_timer;
   };
 
-  class button
+  class button : public pressable
   {
   public:
     button(float x, float y, float width, float height, std::string _text,
@@ -46,15 +44,30 @@ namespace GUI
            sf::Color _outline_active_color = sf::Color::Transparent,
            short unsigned id = 0);
     button();
-    ~button();
+    virtual ~button();
 
-    /*Updates the state for hovered and active button*/
-    void update(const sf::Vector2i &mouse_pos);
-    void render(sf::RenderTarget &target);
+    /* @brief Updates the state for hovered and active button. */
+    void update(const sf::Vector2i &mouse_pos) override;
 
-    const bool pressed() const;
+    /* @brief Renders the given button. */
+    void render(sf::RenderTarget &target) override;
+
+    /* @brief Tells us whether a button is pressed. */
+    virtual const bool pressed() const;
+
+    /* @brief Gives us the button's display text.
+     *   @retval sf::String The button's text string.
+     */
     const sf::String get_text();
+
+    /* @brief Gives us the button's id, if one is assigned.
+     *   @retval unsigned The button's id.
+     */
     const short unsigned get_id() const;
+
+    /* @brief Gives us the button's bounds.
+     *   @retval sf::FloatRect Bounds.
+     */
     const sf::FloatRect get_bounds() const;
 
     void set_id(const short unsigned id);
@@ -84,20 +97,20 @@ namespace GUI
     short unsigned id;
   };
 
-  class drop_down_box
+  class drop_down_box : public pressable
   {
   public:
     drop_down_box(float x, float y, float width, float height, sf::Font &_font,
                   const std::vector<std::string> elem_list,
                   const unsigned default_index = 0);
 
-    void update(const sf::Vector2i &mouse_pos);
-    void render(sf::RenderTarget &target);
+    void update(const sf::Vector2i &mouse_pos) override;
+    void render(sf::RenderTarget &target) override;
 
-    const unsigned short get_active_elem_id() const;
-    const bool get_active() const;
+    virtual const unsigned short get_active_elem_id() const;
+    virtual const bool get_active() const;
 
-    ~drop_down_box();
+    virtual ~drop_down_box();
 
   private:
     void button_handler();
@@ -109,24 +122,23 @@ namespace GUI
 
     sf::RectangleShape list_box;
 
-    GUI::max_press_time pt;
     bool show_menu;
   };
 
-  class texture_selector
+  class texture_selector : public pressable
   {
   public:
     texture_selector(const float _x, const float _y, const float _width, const float _height, const float grid_size, const sf::Texture &texture_sheet, sf::Font &font);
 
-    void update(const sf::Vector2i &mouse_pos_window);
-    void render(sf::RenderTarget &target);
+    void update(const sf::Vector2i &mouse_pos_window) override;
+    void render(sf::RenderTarget &target) override;
 
     const bool get_active() const;
     const bool get_hidden() const;
     void set_hidden(bool _state);
     const sf::IntRect &get_texture_rect() const;
 
-    ~texture_selector();
+    virtual ~texture_selector();
 
   private:
     sf::RectangleShape bounds;
@@ -140,11 +152,9 @@ namespace GUI
     sf::RectangleShape selector;
     sf::IntRect texture_rect;
     sf::Vector2u mouse_pos_grid;
-
-    max_press_time pt;
   };
 
-  class check_box
+  class check_box : public pressable
   {
   public:
     check_box(float x, float y,
@@ -152,13 +162,13 @@ namespace GUI
               sf::Color inactive_color,
               sf::Color hover_color,
               sf::Color active_color);
-    void update(const sf::Vector2f mouse_pos);
-    void render(sf::RenderTarget &target);
+    void update(const sf::Vector2i &mouse_pos) override;
+    void render(sf::RenderTarget &target) override;
 
     void set_active();
 
     const bool get_active() const;
-    ~check_box();
+    virtual ~check_box();
 
   private:
     sf::RectangleShape shape;
@@ -168,8 +178,6 @@ namespace GUI
     sf::Color hover_color;
     sf::Color inactive_color;
     sf::Color active_color;
-
-    max_press_time pt;
   };
 
   /*
