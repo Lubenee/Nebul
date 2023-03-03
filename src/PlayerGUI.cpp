@@ -37,7 +37,7 @@ void player_gui::init_hp_bar()
     hp_bar_text.setFont(font);
     hp_bar_text.setCharacterSize(GUI::calc_char_size(vm, 160));
     hp_bar_text.setPosition(hp_bar_inner.getPosition().x + GUI::p2p_x(0.4f, vm),
-                            hp_bar_inner.getPosition().y + GUI::p2p_y(1.f, vm));
+                            hp_bar_inner.getPosition().y + GUI::p2p_y(0.9f, vm));
 }
 
 void player_gui::init_exp_bar()

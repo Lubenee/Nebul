@@ -1,6 +1,8 @@
 #include "../Headers/pch.h"
 #include "../Headers/SettingsState.hpp"
 
+using namespace GUI;
+
 settings_state::settings_state(state_data *_state_data) : state(_state_data)
 {
   init_keybinds();
@@ -109,58 +111,75 @@ void settings_state::reset_gui()
 
 void settings_state::update_gui()
 {
-  if (!buttons["RESOLUTION"]->get_active())
-    for (auto &i : buttons)
-      i.second->update(mouse_pos_window);
+  if (drop_down_box *temp = dynamic_cast<drop_down_box *>(buttons["RESOLUTION"]))
+  {
+    if (!temp->get_active())
+      for (auto &i : buttons)
+        i.second->update(mouse_pos_window);
+    else
+      temp->update(mouse_pos_window);
+  }
 }
 
 void settings_state::update_collision_timer()
 {
-  if (buttons["RESOLUTION"]->get_active())
-    button_collision_timer.restart();
+  if (drop_down_box *temp = dynamic_cast<drop_down_box *>(buttons["RESOLUTION"]))
+    if (temp->get_active())
+      button_collision_timer.restart();
 }
 
 void settings_state::button_handler()
 {
-  if (buttons["BACK"]->pressed() && valid_button_collision())
-    end_state();
-
-  else if (buttons["APPLY"]->pressed() && valid_button_collision())
+  /* Checks if the back button is pressed. */
+  if (button *temp = dynamic_cast<button *>(buttons["BACK"]))
   {
-    if (state_details->gfx_settings->resolution.width !=
-            vms[buttons["RESOLUTION"]->get_active_elem_id()].width &&
-        state_details->gfx_settings->resolution.height !=
-            vms[buttons["RESOLUTION"]->get_active_elem_id()].height)
-    {
+    if (temp->pressed() && valid_button_collision())
+      end_state();
+  }
+  /* Checks if the apply button is pressed. */
 
-      state_details->gfx_settings->resolution =
-          vms[buttons["RESOLUTION"]->get_active_elem_id()];
-      if (buttons["RADIO_BUTTON"]->get_active())
+  if (button *temp = dynamic_cast<button *>(buttons["APPLY"]))
+  {
+    if (temp->pressed() && valid_button_collision())
+    {
+      if (drop_down_box *drop_temp = dynamic_cast<drop_down_box *>(buttons["RESOLUTION"]))
       {
-        window->create(state_details->gfx_settings->resolution,
-                       state_details->gfx_settings->title, sf::Style::Fullscreen,
-                       state_details->gfx_settings->cs);
+        if (state_details->gfx_settings->resolution.width !=
+                vms[drop_temp->get_active_elem_id()].width &&
+            state_details->gfx_settings->resolution.height !=
+                vms[drop_temp->get_active_elem_id()].height)
+        {
+          state_details->gfx_settings->resolution =
+              vms[drop_temp->get_active_elem_id()];
+          if (check_box *check = dynamic_cast<check_box *>(buttons["RADIO_BUTTON"]))
+          {
+            if (check->get_active())
+            {
+              window->create(state_details->gfx_settings->resolution,
+                             state_details->gfx_settings->title, sf::Style::Fullscreen,
+                             state_details->gfx_settings->cs);
+            }
+            else
+            {
+              window->create(state_details->gfx_settings->resolution,
+                             state_details->gfx_settings->title, sf::Style::Close,
+                             state_details->gfx_settings->cs);
+            }
+          }
+          window->setVerticalSyncEnabled(state_details->gfx_settings->vsync);
+          window->setFramerateLimit(state_details->gfx_settings->framerate_limit);
+          reset_gui();
+        }
       }
-      else
-      {
-        window->create(state_details->gfx_settings->resolution,
-                       state_details->gfx_settings->title, sf::Style::Close,
-                       state_details->gfx_settings->cs);
-      }
-      window->setVerticalSyncEnabled(state_details->gfx_settings->vsync);
-      window->setFramerateLimit(state_details->gfx_settings->framerate_limit);
-      reset_gui();
     }
   }
-  buttons["RADIO_BUTTON"]->update(mouse_pos_window);
 }
-
 void settings_state::update(const float &dt)
 {
   update_collision_timer();
   update_mouse_pos();
-  update_gui();
   button_handler();
+  update_gui();
 }
 
 void settings_state::render_gui(sf::RenderTarget &target)
