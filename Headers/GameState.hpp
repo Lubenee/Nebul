@@ -4,6 +4,7 @@
 #include "PauseMenu.hpp"
 #include "Tilemap.hpp"
 #include "PlayerGUI.hpp"
+#include "Enemy.hpp"
 
 class state;
 class pause_menu;
@@ -56,6 +57,8 @@ private:
 
     sf::Font p_menu_font;
     pause_menu *p_menu;
+
+    enemy *test_enemy;
 };
 
 #endif

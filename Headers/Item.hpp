@@ -8,7 +8,7 @@ public:
     ~item();
 
     void update();
-    void render();
+    void render(sf::RenderTarget &target);
 
 private:
 };

@@ -10,7 +10,7 @@ tilemap::tilemap(float _grid_size, int width, int height, const std::string text
     map_size_tiles.y = height;
     map_size_pixels.x = static_cast<float>(width) * _grid_size;
     map_size_pixels.y = static_cast<float>(height) * _grid_size;
-    layers = 4;
+    layers = 1;
 
     grid_sizef = _grid_size;
     grid_sizeu = static_cast<unsigned>(grid_sizef);
@@ -22,13 +22,17 @@ tilemap::tilemap(float _grid_size, int width, int height, const std::string text
 
     // Allocate enough empty slots for the map vector.
     map.resize(map_size_tiles.x, std::vector<std::vector<std::vector<tile *>>>());
-    for (size_t x = 0; x < map_size_tiles.x; ++x)
+    for (int x = 0; x < map_size_tiles.x; ++x)
     {
-        for (size_t y = 0; y < map_size_tiles.y; ++y)
+        for (int y = 0; y < map_size_tiles.y; ++y)
         {
             map[x].resize(map_size_tiles.y, std::vector<std::vector<tile *>>());
-            for (size_t z = 0; z < layers; ++z)
-                map[x][y].resize(layers, std::vector<tile *>());
+            {
+                for (size_t z = 0; z < layers; ++z)
+                {
+                    map[x][y].resize(layers, std::vector<tile *>());
+                }
+            }
         }
     }
 
@@ -48,17 +52,18 @@ tilemap::tilemap(const std::string file_name)
     to_y = 0;
     layer = 0;
 
+    layers = 1;
+    load_tilemap(file_name);
+
     collision_box.setSize(sf::Vector2f(grid_sizef, grid_sizef));
     collision_box.setFillColor(sf::Color(255, 0, 0, 80));
     collision_box.setOutlineColor(sf::Color::Red);
     collision_box.setOutlineThickness(-1.f);
-
-    load_tilemap(file_name);
 }
 
 void tilemap::init_textures()
 {
-    if (!tile_sheet.loadFromFile("../Assets/tiles/tilesheet1.png"))
+    if (!tile_sheet.loadFromFile("../Assets/tiles/tilesheet3.png"))
         throw("ERROR::TILEMAP::FAILED TO LOAD FILE: " + texture_file + '\n');
 }
 

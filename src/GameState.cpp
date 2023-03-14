@@ -13,6 +13,8 @@ game_state::game_state(state_data *_state_data)
     init_view();
     init_render_canvas();
     init_shaders();
+
+    test_enemy = new enemy(50.f, 50.f, textures["PLAYER_SHEET"]);
 }
 
 void game_state::init_shaders()
@@ -63,7 +65,7 @@ void game_state::init_map()
 
 void game_state::init_player()
 {
-    plr = new player(0, 0, textures["PLAYER_SHEET"]);
+    plr = new player(0.f, 0.f, textures["PLAYER_SHEET"]);
 }
 
 void game_state::init_assets()
@@ -122,7 +124,16 @@ void game_state::update_player_input(const float &dt)
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::I) && pressable_button())
         plr->gain_hp(1);
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-        plr->gain_exp(10);
+        plr->gain_exp(1000);
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_LEFT"])))
+        test_enemy->move(-1.f, 0.f, dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_RIGHT"])))
+        test_enemy->move(1.f, 0.f, dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_UP"])))
+        test_enemy->move(0.f, -1.f, dt);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key(keybinds["MOVE_DOWN"])))
+        test_enemy->move(0.f, 1.f, dt);
 }
 
 void game_state::update_player_gui(const float &dt)
@@ -161,6 +172,7 @@ void game_state::update_view(const float &dt)
 void game_state::update_tilemap(const float &dt)
 {
     map->update_collision(plr, dt);
+    map->update_collision(test_enemy, dt);
 }
 
 void game_state::update(const float &dt)
@@ -172,6 +184,7 @@ void game_state::update(const float &dt)
         update_player_input(dt);
         update_tilemap(dt);
         plr->update(dt, mouse_pos_view);
+        test_enemy->update(dt, mouse_pos_view);
         update_player_gui(dt);
     }
     else if (paused)
@@ -193,8 +206,9 @@ void game_state::render(sf::RenderTarget *target)
                 view_grid_pos,
                 &core_shader,
                 plr->get_center(),
-                true);
+                false);
     plr->render(render_texture, &core_shader);
+    test_enemy->render(render_texture, &core_shader);
 
     map->render_deferred(render_texture, &core_shader, plr->get_center());
 
@@ -215,4 +229,6 @@ game_state::~game_state()
     delete p_menu;
     delete plr;
     delete plr_gui;
+
+    delete test_enemy;
 }

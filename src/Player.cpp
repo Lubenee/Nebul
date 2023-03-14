@@ -105,14 +105,13 @@ void player::render(sf::RenderTarget &target, sf::Shader *shader)
         shader->setUniform("light", get_center());
         target.draw(sprite, shader);
         target.draw(weapon_sprite, shader);
-        hc->render(target);
     }
     else
     {
         target.draw(sprite);
         target.draw(weapon_sprite);
-        hc->render(target);
     }
+    // hc->render(target);
 }
 
 void player::lose_hp(const int hp)
