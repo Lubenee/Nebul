@@ -125,13 +125,13 @@ namespace GUI
     bool show_menu;
   };
 
-  class texture_selector : public pressable
+  class texture_selector
   {
   public:
     texture_selector(const float _x, const float _y, const float _width, const float _height, const float grid_size, const sf::Texture &texture_sheet, sf::Font &font);
 
-    void update(const sf::Vector2i &mouse_pos_window) override;
-    void render(sf::RenderTarget &target) override;
+    void update(const sf::Vector2i &mouse_pos_window);
+    void render(sf::RenderTarget &target);
 
     const bool get_active() const;
     const bool get_hidden() const;

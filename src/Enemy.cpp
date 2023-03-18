@@ -1,14 +1,15 @@
 #include "../Headers/pch.h"
 #include "../Headers/Enemy.hpp"
 
-enemy::enemy(float _x, float _y, sf::Texture &_tex_sheet)
+enemy::enemy(float _x, float _y, sf::Texture &_tex_sheet, enemy_spawner &_spawner)
+    : spawner(_spawner)
 {
     set_pos(_x, _y);
 
     create_hitbox_component(12.f, 10.f, 44.f, 54.f, sprite);
     create_movment_component(200.f, 80.f, 14.f);
-
     create_animation_component(_tex_sheet);
+
     ac->add_animation("IDLE", 15.f, 0, 0, 8, 0, 64, 64);
     ac->add_animation("WALK_DOWN", 10.f, 0, 1, 3, 1, 64, 64);
     ac->add_animation("WALK_LEFT", 10.f, 4, 1, 7, 1, 64, 64);
@@ -60,4 +61,6 @@ void enemy::render(sf::RenderTarget &target, sf::Shader *shader)
     }
 }
 
-enemy::~enemy() {}
+enemy::~enemy()
+{
+}

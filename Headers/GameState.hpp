@@ -57,8 +57,6 @@ private:
 
     sf::Font p_menu_font;
     pause_menu *p_menu;
-
-    enemy *test_enemy;
 };
 
 #endif

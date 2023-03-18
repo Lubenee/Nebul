@@ -6,7 +6,8 @@ enum tt
 {
     DEFAULT = 0,
     DAMAGING,
-    ABOVE_PLAYER
+    ABOVE_PLAYER,
+    SPAWNER,
 
 };
 
@@ -18,13 +19,13 @@ public:
          bool collision = false, short type = tt::DEFAULT);
 
     /*  @brief Used to update the tile, if it needs updating. */
-    void update();
+    virtual void update();
     /*  @brief Renders the tile.
      *       @param target       Render target.
      *       @param shader       (Optional) Nullptr value if not passed.
      *       @param light_src    (Optional) Light source for shaders.
      */
-    void render(sf::RenderTarget &target, sf::Shader *shader = nullptr, const sf::Vector2f light_src = sf::Vector2f());
+    virtual void render(sf::RenderTarget &target, sf::Shader *shader = nullptr, const sf::Vector2f light_src = sf::Vector2f());
 
     /*  @brief Returns the tile's type. */
     const short get_type() const;
@@ -45,8 +46,8 @@ public:
     const sf::IntRect get_texture_rect() const;
 
     /*  @brief Checks for intersection.
-    *       @param bounds Float Rectangle of another body.
-    */
+     *       @param bounds Float Rectangle of another body.
+     */
     const bool intersects(const sf::FloatRect &_bounds) const;
 
     friend std::ostream &operator<<(std::ostream &os, const tile &tile);

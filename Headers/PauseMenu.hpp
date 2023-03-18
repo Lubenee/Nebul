@@ -17,9 +17,6 @@ public:
 
     ~pause_menu();
 
-protected:
-    void init_buttons();
-
 private:
     sf::RectangleShape background;
     sf::RectangleShape container;

@@ -27,12 +27,6 @@ pause_menu::pause_menu(sf::VideoMode &vm, sf::Font &_font)
     text.setPosition(sf::Vector2f(
         container.getPosition().x + container.getSize().x / 2.f - text.getGlobalBounds().width / 2.f,
         container.getPosition().y + GUI::p2p_y(4.f, vm)));
-
-    init_buttons();
-}
-
-void pause_menu::init_buttons()
-{
 }
 
 void pause_menu::update(const sf::Vector2i &mouse_pos)
